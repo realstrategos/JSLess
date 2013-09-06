@@ -1,4 +1,10 @@
 #################
+## Compiled Javascript
+#################
+JSLess/Scripts/jsless.js
+JSLess/Scripts/jsless.min.js
+
+#################
 ## Eclipse
 #################
 
