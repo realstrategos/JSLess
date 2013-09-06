@@ -1,0 +1,114 @@
+﻿@using JSLess
+@using JSLess.Models
+@{
+
+    Layout = "~/Views/Layouts/_Partial.cshtml";
+    ViewBag.Title = "UserProfile";
+    List<string> industryList = ViewBag.industryList;
+    List<string> rolesList = ViewBag.rolesList;
+}
+@model UserProfile
+<h2>UserProfile</h2>
+<form>
+    <input type="button" value="post"     data-jsless="@(  new object[] 
+             { 
+                 new { 
+                     name = "html", 
+                     url = "/Sample/UserProfile", 
+                     method="POST",
+                     onSuccess = ".div1", 
+                     onFail = ".div3", 
+                     @params = 
+                     new { 
+                         test = 1, 
+                         test2 = "foobar" } 
+                 } 
+             }.ToJsonObject())"
+/>
+    <div>
+        @Html.ValidationSummary(true)
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FullName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.FullName)
+        </div>
+        <div style="float: none">
+
+            <div>
+                @foreach (String s in industryList)
+                {
+                    if (Model.Industries.Any(o => o == s))
+                    {
+                    <div>
+                        <label>
+                            <input type="checkbox" name="ind" checked="checked" />@s</label>
+                    </div>
+                    }
+                    else
+                    {
+                    <div>
+                        <label>
+                            <input type="checkbox" name="ind" />@s</label>
+                    </div>
+                    }
+                }
+            </div>
+            <div style="padding: 20px 20px 20px 20px">
+                <select multiple size="5">
+                    @foreach (String r in rolesList)
+                    {
+                        if (Model.Roles.Any(o => o == r))
+                        {
+                        <option value="@r" selected="selected">@r</option>
+                        }
+                        else
+                        {
+                        <option value="@r" >@r</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div style="position: absolute">
+            <h4>The address is a complex type - lets see how it posts</h4>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.HomeAddress.Address1)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.HomeAddress.Address1)
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.HomeAddress.Address2)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.HomeAddress.Address2)
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.HomeAddress.City)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.HomeAddress.City)
+            </div>
+
+            <div class="editor-label">
+                @Html.LabelFor(model => model.HomeAddress.State)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.HomeAddress.State)
+            </div>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.HomeAddress.PostalCode)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.HomeAddress.PostalCode)
+            </div>
+
+        </div>
+    </div>
+</form>
+
+
+

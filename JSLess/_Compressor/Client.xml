@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/MsBuild/2003">
+  <UsingTask TaskName="CompressorTask" AssemblyFile="$(SFolder)packages\YUICompressor.NET-MsBuild-Task.1.7.0.0\lib\net35\Yahoo.Yui.Compressor.MsBuildTask.dll" />
+  <Target Name="DesktopClientFiles">
+    <ItemGroup>
+      <JSLess Include="$(PFolder)\Scripts\jsless-core.js" />
+      <JSLess Include="$(PFolder)\Scripts\jsless-invoke.js" />
+      <JSLess Include="$(PFolder)\Scripts\jsless-methods.js" />
+      <JSLess Include="$(PFolder)\Scripts\jsless-behaviors.js" />
+    </ItemGroup>
+    
+    <CompressorTask
+        CssFiles=""
+        CssOutputFile=""
+        JavaScriptFiles="@(JSLess)"
+        JavaScriptOutputFile="$(PFolder)\Scripts\jsless.min.js"
+        DeleteCssFiles="false"
+        CssCompressionType="YuiStockCompression"
+        ObfuscateJavaScript="True"
+        PreserveAllSemicolons="False"
+        DisableOptimizations="Nope"
+        EncodingType="Default"
+        DeleteJavaScriptFiles="false"
+        LineBreakPosition="-1"
+        LoggingType="ALittleBit"
+        ThreadCulture="en-us"
+        IsEvalIgnored="false"
+            />
+    <WriteLinesToFile File="$(PFolder)\Scripts\jsless.js" Lines="" Overwrite="true" />
+    <WriteLinesToFile File="$(PFolder)\Scripts\jsless.js" Lines="$([System.IO.File]::ReadAllText(%(JSLess.Identity)))%0a%0d" Overwrite="false" />
+  </Target>
+</Project>

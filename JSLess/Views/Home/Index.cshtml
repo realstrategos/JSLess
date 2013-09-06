@@ -1,0 +1,45 @@
+﻿@using JSLess
+@{
+    Layout = "~/Views/Layouts/_Page.cshtml";
+}
+
+<div class="div1">
+    div1
+</div>
+<div class="div2" data-jsless="@( new object[] { new { name = "html", url = "/Home/Partial1", onSuccess = ".div1", onFail = ".div3", @params = new { test = 1, test2 = "john's \"quote\" test" } } }.ToJsonObject())">
+    div2
+</div>
+<div class="div3">
+    div3
+</div>
+<div class="div4">
+    <input name="zone3" type="number" value="3" />
+</div>
+<div>
+    <button data-jsless="@( new object[] { 
+                         new { name = "plus1", target = ".div4 input" }, 
+                         new { name = "show", target = ".div4 input" } }.ToJsonObject())">
+        Plus1</button>
+    <button data-jsless="@( new object[] {                          
+                         new { name = "hide", target = ".div4 input" }
+                     }.ToJsonObject())">
+        Hide</button>
+</div>
+<div>
+    SubWidget:
+    <div data-jsless-widget="sdfgsdfg">
+        <div class="div4">
+            <input name="zone2" type="number" value="3" />
+        </div>
+        <button data-jsless="@( new object[] { 
+                         new { name = "plus1", target = ".div4 input" }, 
+                         new { name = "show", target = ".div4 input" } }.ToJsonObject())">
+            Plus1</button>
+        <button data-jsless="@( new object[] {                          
+                         new { name = "hide", target = ".div4 input" }
+                     }.ToJsonObject())">
+            Hide</button>
+        <div data-jsless-widget="sdfg333sdfg"></div>
+    </div>
+
+</div>

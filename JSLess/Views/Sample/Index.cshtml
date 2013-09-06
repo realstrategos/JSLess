@@ -1,0 +1,32 @@
+﻿@using JSLess
+@using JSLess.Models
+@{
+    Layout = "~/Views/Layouts/_Page.cshtml";
+
+    ViewBag.Title = "Index";
+}
+
+
+<div 
+    class="div2" 
+    data-jsless="@(  new object[] 
+             { 
+                 new { 
+                     name = "html", 
+                     url = "/Sample/UserProfile", 
+                     onSuccess = ".div1", 
+                     onFail = ".div3", 
+                     @params = 
+                     new { 
+                         test = 1, 
+                         test2 = "john's \"quote\" test" } 
+                 } 
+             }.ToJsonObject())">
+    User Profile
+</div>
+<div class="div1">
+    div1
+</div>
+<div class="div3">
+    div3
+</div>
