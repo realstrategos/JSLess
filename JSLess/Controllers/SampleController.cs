@@ -45,41 +45,44 @@ namespace JSLess.Controllers
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult UserProfile(UserProfile model)
         {
-            List<string> industryList = (from i in Enumerable.Range(1, 8) select "Industry-" + i.ToString()).ToList();
-            List<string> rolesList = (from i in Enumerable.Range(1, 8) select "Role-" + i.ToString()).ToList();
-            Dictionary<string, Guid> itemList = new Dictionary<string, Guid>();
-
-            industryList.Insert(0, "Medical");
-            industryList.Insert(0, "Finance");
-            industryList.Insert(0, "Technology");
-
-            for (int i = 0; i < 20; i++)
+            if (Request.HttpMethod == "POST")
             {
-                itemList.Add("Item-" + i.ToString(), Guid.NewGuid());
-            }
+                List<string> industryList = (from i in Enumerable.Range(1, 8) select "Industry-" + i.ToString()).ToList();
+                List<string> rolesList = (from i in Enumerable.Range(1, 8) select "Role-" + i.ToString()).ToList();
+                Dictionary<string, Guid> itemList = new Dictionary<string, Guid>();
 
-            ViewBag.IndustryList = industryList;
-            ViewBag.RolesList = rolesList;
-            ViewBag.ItemList = itemList;
+                industryList.Insert(0, "Medical");
+                industryList.Insert(0, "Finance");
+                industryList.Insert(0, "Technology");
 
-            if (Request.HttpMethod == "POST" && Request["impersonateGET"] == null)
-            {
-            }
-            else
-            {
-                model = new UserProfile
+                for (int i = 0; i < 20; i++)
                 {
-                    FullName = "John Doe",
-                    Industries = new List<string>(new string[] { "Medical", "Finance", "Technology" }),
-                    Roles = new List<string>(new string[] { "Role-1", "Role-2" }),
-                    HomeAddress = new Address
+                    itemList.Add("Item-" + i.ToString(), Guid.NewGuid());
+                }
+
+                ViewBag.IndustryList = industryList;
+                ViewBag.RolesList = rolesList;
+                ViewBag.ItemList = itemList;
+
+                if (Request.HttpMethod == "POST" && Request["impersonateGET"] == null)
+                {
+                }
+                else
+                {
+                    model = new UserProfile
                     {
-                        Address1 = "123 main stz",
-                        City = "Medina",
-                        State = "OH",
-                        PostalCode = "44221"
-                    },
-                };
+                        FullName = "John Doe",
+                        Industries = new List<string>(new string[] { "Medical", "Finance", "Technology" }),
+                        Roles = new List<string>(new string[] { "Role-1", "Role-2" }),
+                        HomeAddress = new Address
+                        {
+                            Address1 = "123 main stz",
+                            City = "Medina",
+                            State = "OH",
+                            PostalCode = "44221"
+                        },
+                    };
+                }
             }
             return PartialView("_userProfile", model);
         }
