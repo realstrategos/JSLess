@@ -47,12 +47,20 @@ namespace JSLess.Controllers
         {
             List<string> industryList = (from i in Enumerable.Range(1, 8) select "Industry-" + i.ToString()).ToList();
             List<string> rolesList = (from i in Enumerable.Range(1, 8) select "Role-" + i.ToString()).ToList();
+            Dictionary<string, Guid> itemList = new Dictionary<string, Guid>();
 
             industryList.Insert(0, "Medical");
             industryList.Insert(0, "Finance");
             industryList.Insert(0, "Technology");
-            ViewBag.industryList = industryList;
-            ViewBag.rolesList = rolesList;
+
+            for (int i = 0; i < 20; i++)
+            {
+                itemList.Add("Item-" + i.ToString(), Guid.NewGuid());
+            }
+
+            ViewBag.IndustryList = industryList;
+            ViewBag.RolesList = rolesList;
+            ViewBag.ItemList = itemList;
 
             if (Request.HttpMethod == "POST" && Request["impersonateGET"] == null)
             {
@@ -70,7 +78,7 @@ namespace JSLess.Controllers
                         City = "Medina",
                         State = "OH",
                         PostalCode = "44221"
-                    }
+                    },
                 };
             }
             return PartialView("_userProfile", model);

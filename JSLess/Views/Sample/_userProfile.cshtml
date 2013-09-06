@@ -1,17 +1,15 @@
 ﻿@using JSLess
 @using JSLess.Models
+@model UserProfile
 @{
-
     Layout = "~/Views/Layouts/_Partial.cshtml";
     ViewBag.Title = "UserProfile";
-    List<string> industryList = ViewBag.industryList;
-    List<string> rolesList = ViewBag.rolesList;
-}
-@model UserProfile
-<h2>UserProfile</h2>
-<form>
-    <input type="button" value="post"     data-jsless="@(  new object[] 
-             { 
+    List<string> industryList = ViewBag.IndustryList ?? new List<string>();
+    List<string> rolesList = ViewBag.RolesList ?? new List<string>();
+    List<KeyValuePair<string, Guid>> itemList = ViewBag.ItemList ?? new List<KeyValuePair<string, Guid>>() { };
+
+
+    var formButton = new object[]              { 
                  new { 
                      name = "html", 
                      url = "/Sample/UserProfile", 
@@ -23,8 +21,12 @@
                          test = 1, 
                          test2 = "foobar" } 
                  } 
-             }.ToJsonObject())"
-/>
+             };
+ }
+
+<form>
+    <h3>UserProfile</h3>
+    <input type="button" value="post" data-jsless="@(formButton.ToJsonObject())" />
     <div>
         @Html.ValidationSummary(true)
         <div class="editor-label">
@@ -34,40 +36,36 @@
             @Html.EditorFor(model => model.FullName)
         </div>
         <div style="float: none">
-
             <div>
+                <div>
+                    Industries:
+                </div>
                 @foreach (String s in industryList)
                 {
-                    if (Model.Industries.Any(o => o == s))
-                    {
-                    <div>
-                        <label>
-                            <input type="checkbox" name="ind" checked="checked" />@s</label>
-                    </div>
-                    }
-                    else
-                    {
-                    <div>
-                        <label>
-                            <input type="checkbox" name="ind" />@s</label>
-                    </div>
-                    }
+                    <label>
+                        <input type="checkbox" name="Industries" @(Model.Industries.Any(o => o == s) ? "checked=\"checked\"" : "")  value="@s" />@s</label>
                 }
             </div>
             <div style="padding: 20px 20px 20px 20px">
-                <select multiple size="5">
+                <div>Roles:</div>
+                <select name="Roles" multiple size="5">
                     @foreach (String r in rolesList)
-                    {
-                        if (Model.Roles.Any(o => o == r))
-                        {
-                        <option value="@r" selected="selected">@r</option>
-                        }
-                        else
-                        {
-                        <option value="@r" >@r</option>
-                        }
+                    {                        
+                        <option value="@r" @(Model.Roles.Any(o => o == r) ? "selected=\"selected\"" : "")>@r</option>                        
                     }
                 </select>
+            </div>
+            <div style="padding: 20px 20px 20px 20px">
+                <div>ItemCounts:</div>
+                <div>
+                    @foreach (var item in itemList)
+                    { 
+                        <label for="ItemCounts_@item.Value">
+                        </label>
+                        <input id="ItemCounts_@item.Value" name="ItemCounts" data-key="@item.Value" value="@(Model.ItemCounts.ContainsKey(item.Value) ? Model.ItemCounts[item.Value] : 0)" />                            
+                    }
+                </div>
+
             </div>
         </div>
         <div style="position: absolute">
@@ -109,6 +107,3 @@
         </div>
     </div>
 </form>
-
-
-
