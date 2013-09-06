@@ -6,7 +6,7 @@
     ViewBag.Title = "UserProfile";
     List<string> industryList = ViewBag.IndustryList ?? new List<string>();
     List<string> rolesList = ViewBag.RolesList ?? new List<string>();
-    List<KeyValuePair<string, Guid>> itemList = ViewBag.ItemList ?? new List<KeyValuePair<string, Guid>>() { };
+    Dictionary<string, Guid> itemList = ViewBag.ItemList ?? new Dictionary<string, Guid>() { };
 
 
     var formButton = new object[]              { 
@@ -22,7 +22,7 @@
                          test2 = "foobar" } 
                  } 
              };
- }
+}
 
 <form>
     <h3>UserProfile</h3>
@@ -42,8 +42,10 @@
                 </div>
                 @foreach (String s in industryList)
                 {
-                    <label>
-                        <input type="checkbox" name="Industries" @(Model.Industries.Any(o => o == s) ? "checked=\"checked\"" : "")  value="@s" />@s</label>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="Industries" @(Model.Industries.Any(o => o == s) ? "checked=\"checked\"" : "")  value="@s" />@s</label>
+                    </div>
                 }
             </div>
             <div style="padding: 20px 20px 20px 20px">
@@ -60,9 +62,11 @@
                 <div>
                     @foreach (var item in itemList)
                     { 
-                        <label for="ItemCounts_@item.Value">
-                        </label>
-                        <input id="ItemCounts_@item.Value" name="ItemCounts" data-key="@item.Value" value="@(Model.ItemCounts.ContainsKey(item.Value) ? Model.ItemCounts[item.Value] : 0)" />                            
+                        <div>
+                            <label for="ItemCounts_@item.Value">@item.Key
+                            </label>
+                            <input id="ItemCounts_@item.Value" name="ItemCounts" data-key="@item.Value" value="@(Model.ItemCounts.ContainsKey(item.Value) ? Model.ItemCounts[item.Value] : 0)" />
+                        </div>
                     }
                 </div>
 
