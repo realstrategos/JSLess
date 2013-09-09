@@ -45,7 +45,7 @@ namespace JSLess.Controllers
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post)]
         public ActionResult UserProfile(UserProfile model)
         {
-            if (Request.HttpMethod == "POST")
+            if (Request.HttpMethod != "POST")
             {
                 List<string> industryList = (from i in Enumerable.Range(1, 8) select "Industry-" + i.ToString()).ToList();
                 List<string> rolesList = (from i in Enumerable.Range(1, 8) select "Role-" + i.ToString()).ToList();

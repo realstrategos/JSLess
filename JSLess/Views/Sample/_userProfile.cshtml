@@ -11,7 +11,7 @@
 
     var formButton = new object[]              { 
                  new { 
-                     name = "html", 
+                     name = "htmlform", 
                      url = "/Sample/UserProfile", 
                      method="POST",
                      onSuccess = ".div1", 
@@ -65,7 +65,7 @@
                         <div>
                             <label for="ItemCounts_@item.Value">@item.Key
                             </label>
-                            <input id="ItemCounts_@item.Value" name="ItemCounts" data-key="@item.Value" value="@(Model.ItemCounts.ContainsKey(item.Value) ? Model.ItemCounts[item.Value] : 0)" />
+                            <input id="ItemCounts_@item.Value" name="ItemCounts" data-index="@item.Value" value="@(Model.ItemCounts.ContainsKey(item.Value) ? Model.ItemCounts[item.Value] : 0)" />
                         </div>
                     }
                 </div>
