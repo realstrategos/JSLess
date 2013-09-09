@@ -108,7 +108,7 @@
             behaviorCounter++;
             var name = behavior.name;
             if (jsless.behaviors[name] === undefined) {
-                if (name == "html" || name == "form") { // allow override of methods
+                if (name == "html" || name == "htmlform") { // allow override of methods
                     jsless._methods[name]($widget, $element, behavior, settings);
                 }
                 else {

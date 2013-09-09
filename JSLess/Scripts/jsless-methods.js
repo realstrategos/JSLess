@@ -237,21 +237,21 @@
                     }
                 }, jsless.settings.method, options.method, behavior);
 
-                if (settings.params.form.length == 0) {
+                if (settings.params.forms.length == 0) {
                     if ($element.is("form")) {
                         console.debug("element is form");
-                        settings.params.form.push($element);
+                        settings.params.forms.push($element);
                     }
                     else {
-                        $form = $element.parentsUntil($widget, "form");
-                        if ($form.length == 0) {
+                        var $form = $element.parentsUntil($widget, "form");
+                        if ($form.length == 1) {
                             console.debug("element is within form");
                         }
                         else {
                             console.debug("element is formless");
                             $form = $element;
                         }
-                        settings.params.form.push($form);
+                        settings.params.forms.push($form);
                     }
                 }
 
