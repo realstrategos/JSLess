@@ -24,9 +24,10 @@
              };
 }
 
-<form>
+<form data-jsless="@(formButton.ToJsonObject())">
     <h3>UserProfile</h3>
     <input type="button" value="post" data-jsless="@(formButton.ToJsonObject())" />
+    <input type="submit" value="submit" />
     <div>
         @Html.ValidationSummary(true)
         <div class="editor-label">

@@ -81,7 +81,7 @@
             });
             var $targets = $element.find("[data-jsless]").addBack("[data-jsless]");
             $targets = $targets.filter(function (index) {
-                var temp = $(this).parentsUntil($element, "[data-jsless-widget]").length == 0;
+                var temp = $(this).parentsUntil($element.parent(), "[data-jsless-widget]").length <= 1;
                 return temp;
             });
             console.log("found: " + $targets.length + " elements and " + $subWidgets.length + " sub widgets ...");

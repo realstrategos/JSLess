@@ -122,7 +122,7 @@
             var forms = {};
             if (params.forms) {
                 $.each(params.forms, function (indx, val) {
-                    var $form = val();
+                    var $form = val;
                     var formValues = jsless.processForm($form);
                     $.extend(forms, formValues);
                 });
@@ -229,7 +229,8 @@
                     name: 'html',
                     url: null,
                     method: 'GET',
-                    event: 'submit',
+                    event: $element.is("form") ? 'submit' : 'click',
+                    eventstop: $element.is("form"),
                     onSuccess: 'widget',
                     onFail: 'widget',
                     params: {
@@ -255,7 +256,6 @@
                         settings.params.forms.push($form);
                     }
                 }
-
                 jsless._methods.html($widget, $element, settings, options);
             }
         }
