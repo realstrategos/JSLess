@@ -121,9 +121,9 @@
             }
             var forms = {};
             if (params.forms) {
-                $.each(params.forms, function (indx, val) {
-                    var $form = val;
-                    var formValues = jsless.processForm($form);
+                $.each(params.forms, function (indx, form) {
+                    var $form = form.getVal();
+                    var formValues = jsless.processContainer($form);
                     $.extend(forms, formValues);
                 });
                 delete params.forms;
@@ -140,8 +140,70 @@
             var result = $.extend({}, forms, dynamicParams, temp);
             return result;
         },
-        processForm: function ($form) {
-            return {};
+        getValue: function ($element, result, name) {
+            if ($element.attr("contenteditiable") != null) {
+                result[name] = $element.html();
+            }
+            else if ($element.is("input:checked, select[multiple] option:selected")) {
+                result[name] = result[name] || [];
+                result[name].push($element.val());
+            }
+            else if ($element.is("option:selected")) {
+                result[name] = $element.val();
+            }
+            else if ($element.is("select")) {
+                $element.find("option:selected").each(function (index, item) {
+                    result = jsless.getValue($(item), result, name);
+                });
+            }
+            else {
+                result[name] = $element.val();
+            }
+            return result;
+        },
+        processContainer: function ($container) {
+            var complex = "[name],[data-list]";
+            var simple = "input[type!='button'][type!='submit'][name],select,textarea,[contenteditable]";
+            
+            //get toplevel elements
+            var $elements = $container.find(complex + "," + simple).filter(function (index) {
+                var temp = $(this).parentsUntil($container, complex).length == 0;
+                return temp;
+            });
+            var $simple = $elements.filter(simple);
+            var $complex = $elements.not($simple);
+
+            var result = {};
+            $.each($simple, function (index, element) {
+                var $element = $(element);
+                var name = $element.attr("name");
+                if ($element.attr("data-index") != null) {
+                    name += "[" + $element.attr("data-index") + "]";
+                }
+                if (name == null) {
+                    console.warn("element has no name: " + $element[0].outerHTML);
+                    return;
+                }
+                var temp = jsless.getValue($element, result, name);
+                result = temp;
+            });
+
+            $.each($complex, function (index, element) {
+                var $element = $(element);
+                var temp = jsless.processContainer($element);
+
+                if ($element.attr("data-list") != null) {
+                    var name = $element.attr("data-list");
+                    result[name] = result[name] || [];                    
+                    result[name].push(temp);
+                }
+                else {
+                    var name = $element.attr("name");                    
+                    result[$element.attr("name")] = temp;
+                }
+            });
+
+            return result;
         },
         _methods: {
             html: function ($widget, $element, behavior, options) {

@@ -24,7 +24,7 @@
              };
 }
 
-<form data-jsless="@(formButton.ToJsonObject())">
+<form>
     <h3>UserProfile</h3>
     <input type="button" value="post" data-jsless="@(formButton.ToJsonObject())" />
     <input type="submit" value="submit" />
@@ -45,13 +45,59 @@
                 {
                     <div>
                         <label>
-                            <input type="checkbox" name="Industries" @(Model.Industries.Any(o => o == s) ? "checked=\"checked\"" : "")  value="@s" />@s</label>
+                            <input type="checkbox" data-list="Industries" @(Model.Industries.Any(o => o == s) ? "checked=\"checked\"" : "")  value="@s" />@s</label>
+                    </div>
+                }
+            </div>
+            <div>
+                <div>
+                    Industries (Complex):
+                </div>
+                @foreach (String s in industryList)
+                {
+                    <div data-list="ComplexIndustries" style="padding-bottom: 10px;">
+                        <label>
+                            <input type="checkbox" name="visible"  @(Model.Industries.Any(o => o == s) ? "checked=\"checked\"" : "")  /></label>
+                        <label>
+                            @s:
+                            <input type="text" name="displayname"  @(Model.Industries.Any(o => o == s) ? "checked=\"checked\"" : "")  value="@s" />
+                            <input type="hidden" name="name" value="@s" />
+
+                        </label>
+                        <div data-list="options">
+                            <label>
+                                Region:
+                            <input type="text" name="region" value="region1" />
+                            </label>
+                            <label>
+                                Reviewed:
+                            <input type="checkbox" name="reviewed" />
+                            </label>
+                            <label>
+                                Watchlist:
+                            <input type="checkbox" name="watchlist" />
+                            </label>
+                        </div>
+                        <div data-list="options">
+                            <label>
+                                Region:
+                            <input type="text" name="region" value="region2" />
+                            </label>
+                            <label>
+                                Reviewed:
+                            <input type="checkbox" name="reviewed" />
+                            </label>
+                            <label>
+                                Watchlist:
+                            <input type="checkbox" name="watchlist" />
+                            </label>
+                        </div>
                     </div>
                 }
             </div>
             <div style="padding: 20px 20px 20px 20px">
                 <div>Roles:</div>
-                <select name="Roles" multiple size="5">
+                <select name="Roles" multiple="multiple" size="5">
                     @foreach (String r in rolesList)
                     {                        
                         <option value="@r" @(Model.Roles.Any(o => o == r) ? "selected=\"selected\"" : "")>@r</option>                        
@@ -72,6 +118,30 @@
                 </div>
 
             </div>
+        </div>
+        <div name="nested">
+            <h4>Nested name Test</h4>
+            <div class="editor-label">
+                <label>Test1</label>
+            </div>
+            <div class="editor-field">
+                <input type="text" name="test1" value="abc" />
+            </div>
+            <div class="editor-label">
+                <label>Test2</label>
+            </div>
+            <div class="editor-field">
+                <input type="text" name="test2" value="def" />
+            </div>
+            <div name="deeper">
+                <div class="editor-label">
+                    <label>Test3</label>
+                </div>
+                <div class="editor-field">
+                    <input type="text" name="test3" value="ghi" />
+                </div>
+            </div>
+
         </div>
         <div style="position: absolute">
             <h4>The address is a complex type - lets see how it posts</h4>
