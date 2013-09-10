@@ -81,7 +81,7 @@
             });
             var $targets = $element.find("[data-jsless]").addBack("[data-jsless]");
             $targets = $targets.filter(function (index) {
-                var temp = $(this).parentsUntil($element, "[data-jsless-widget]").length == 0;
+                var temp = $(this).parentsUntil($element.parent(), "[data-jsless-widget]").length <= 1;
                 return temp;
             });
             console.log("found: " + $targets.length + " elements and " + $subWidgets.length + " sub widgets ...");
@@ -108,7 +108,7 @@
             behaviorCounter++;
             var name = behavior.name;
             if (jsless.behaviors[name] === undefined) {
-                if (name == "html" || name == "form") { // allow override of methods
+                if (name == "html" || name == "htmlform") { // allow override of methods
                     jsless._methods[name]($widget, $element, behavior, settings);
                 }
                 else {
@@ -404,7 +404,7 @@
                     return $val;
                 }
             }
-            if (typeof selector === 'object') {
+            if (typeof selector === 'object' && !selector instanceof jQuery) {
                 $.extend(settings, selector);
             }
             else {
@@ -466,7 +466,7 @@
             if (params.forms) {
                 var forms = [];
                 $.each(params.forms, function (indx, val) {
-                    var form = jsless.getSelector(settings, $widget, $element);
+                    var form = jsless.getSelector(val, $widget, $element);
                     forms.push(form);
                 });
                 params.forms = forms;
@@ -485,9 +485,9 @@
             }
             var forms = {};
             if (params.forms) {
-                $.each(params.forms, function (indx, val) {
-                    var $form = val();
-                    var formValues = jsless.processForm($form);
+                $.each(params.forms, function (indx, form) {
+                    var $form = form.getVal();
+                    var formValues = jsless.processContainer($form);
                     $.extend(forms, formValues);
                 });
                 delete params.forms;
@@ -504,8 +504,70 @@
             var result = $.extend({}, forms, dynamicParams, temp);
             return result;
         },
-        processForm: function ($form) {
-            return {};
+        getValue: function ($element, result, name) {
+            if ($element.attr("contenteditiable") != null) {
+                result[name] = $element.html();
+            }
+            else if ($element.is("input:checked, select[multiple] option:selected")) {
+                result[name] = result[name] || [];
+                result[name].push($element.val());
+            }
+            else if ($element.is("option:selected")) {
+                result[name] = $element.val();
+            }
+            else if ($element.is("select")) {
+                $element.find("option:selected").each(function (index, item) {
+                    result = jsless.getValue($(item), result, name);
+                });
+            }
+            else {
+                result[name] = $element.val();
+            }
+            return result;
+        },
+        processContainer: function ($container) {
+            var complex = "[name],[data-list]";
+            var simple = "input[type!='button'][type!='submit'][name],select,textarea,[contenteditable]";
+            
+            //get toplevel elements
+            var $elements = $container.find(complex + "," + simple).filter(function (index) {
+                var temp = $(this).parentsUntil($container, complex).length == 0;
+                return temp;
+            });
+            var $simple = $elements.filter(simple);
+            var $complex = $elements.not($simple);
+
+            var result = {};
+            $.each($simple, function (index, element) {
+                var $element = $(element);
+                var name = $element.attr("name");
+                if ($element.attr("data-index") != null) {
+                    name += "[" + $element.attr("data-index") + "]";
+                }
+                if (name == null) {
+                    console.warn("element has no name: " + $element[0].outerHTML);
+                    return;
+                }
+                var temp = jsless.getValue($element, result, name);
+                result = temp;
+            });
+
+            $.each($complex, function (index, element) {
+                var $element = $(element);
+                var temp = jsless.processContainer($element);
+
+                if ($element.attr("data-list") != null) {
+                    var name = $element.attr("data-list");
+                    result[name] = result[name] || [];                    
+                    result[name].push(temp);
+                }
+                else {
+                    var name = $element.attr("name");                    
+                    result[$element.attr("name")] = temp;
+                }
+            });
+
+            return result;
         },
         _methods: {
             html: function ($widget, $element, behavior, options) {
@@ -514,6 +576,7 @@
                     url: null,
                     method: 'GET',
                     event: 'click',
+                    eventstop: false,
                     onSuccess: 'widget',
                     onFail: 'widget',
                     params: {
@@ -529,7 +592,7 @@
                 var compiledParams = jsless.compileParams(settings.params, $widget, $element);
                 $element.bind(settings.event, function (event) {
                     console.debug(settings.name + " event:" + settings.event);
-                    if (settings.event == "submit") {
+                    if (settings.eventstop) {
                         event.preventDefault(); //prevent form submit
                     }
                     var params = jsless.getParams(compiledParams);
@@ -592,7 +655,8 @@
                     name: 'html',
                     url: null,
                     method: 'GET',
-                    event: 'submit',
+                    event: $element.is("form") ? 'submit' : 'click',
+                    eventstop: $element.is("form"),
                     onSuccess: 'widget',
                     onFail: 'widget',
                     params: {
@@ -601,24 +665,23 @@
                     }
                 }, jsless.settings.method, options.method, behavior);
 
-                if (settings.params.form.length == 0) {
+                if (settings.params.forms.length == 0) {
                     if ($element.is("form")) {
                         console.debug("element is form");
-                        settings.params.form.push($element);
+                        settings.params.forms.push($element);
                     }
                     else {
-                        $form = $element.parentsUntil($widget, "form");
-                        if ($form.length == 0) {
+                        var $form = $element.parentsUntil($widget, "form");
+                        if ($form.length == 1) {
                             console.debug("element is within form");
                         }
                         else {
                             console.debug("element is formless");
                             $form = $element;
                         }
-                        settings.params.form.push($form);
+                        settings.params.forms.push($form);
                     }
                 }
-
                 jsless._methods.html($widget, $element, settings, options);
             }
         }
