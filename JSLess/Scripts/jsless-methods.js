@@ -150,6 +150,7 @@
                     url: null,
                     method: 'GET',
                     event: 'click',
+                    eventstop: false,
                     onSuccess: 'widget',
                     onFail: 'widget',
                     params: {
@@ -165,7 +166,7 @@
                 var compiledParams = jsless.compileParams(settings.params, $widget, $element);
                 $element.bind(settings.event, function (event) {
                     console.debug(settings.name + " event:" + settings.event);
-                    if (settings.event == "submit") {
+                    if (settings.eventstop) {
                         event.preventDefault(); //prevent form submit
                     }
                     var params = jsless.getParams(compiledParams);
