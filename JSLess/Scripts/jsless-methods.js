@@ -40,7 +40,7 @@
                     return $val;
                 }
             }
-            if (typeof selector === 'object') {
+            if (typeof selector === 'object' && !selector instanceof jQuery) {
                 $.extend(settings, selector);
             }
             else {
@@ -102,7 +102,7 @@
             if (params.forms) {
                 var forms = [];
                 $.each(params.forms, function (indx, val) {
-                    var form = jsless.getSelector(settings, $widget, $element);
+                    var form = jsless.getSelector(val, $widget, $element);
                     forms.push(form);
                 });
                 params.forms = forms;
