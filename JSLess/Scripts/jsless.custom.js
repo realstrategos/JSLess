@@ -31,7 +31,7 @@
                     name: 'show',
                     object: "jQuery",
                     method: 'show',
-                    params: ["300"]
+                    params: []
                 }, jsless.settings.behavior, options.behavior, behavior);
 
                 //shortcut for execute
@@ -42,7 +42,7 @@
                     name: 'hide',
                     object: "jQuery",
                     method: 'hide',
-                    params: ["300"]
+                    params: []
                 }, jsless.settings.behavior, options.behavior, behavior);
 
                 //shortcut for execute
