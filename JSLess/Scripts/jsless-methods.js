@@ -218,7 +218,10 @@
                 }
                 else {
                     var name = $element.attr("name");
-                    result[$element.attr("name")] = temp;
+                    if ($element.attr("data-index") != null) {
+                        name += "[" + $element.attr("data-index") + "]";
+                    }
+                    result[name] = temp;
                 }
             });
 

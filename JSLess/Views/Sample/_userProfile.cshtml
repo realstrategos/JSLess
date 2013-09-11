@@ -116,12 +116,6 @@
                         </div>
                     }
                 </div>
-                <div name="testDict"  data-index="@Guid.NewGuid()">
-                    <input type="hidden" value="asdf" name="joe" />
-                </div>
-                <div name="testDict"  data-index="@Guid.NewGuid()">
-                    <input type="hidden" value="asdf" name="bob" />
-                </div>
 
             </div>
         </div>
@@ -146,9 +140,20 @@
                 <div class="editor-field">
                     <input type="text" name="test3" value="ghi" />
                 </div>
+                <div name="testDict"  data-index="@Guid.NewGuid()">
+                    <input type="hidden" value="joe" name="name" />
+                    <input type="hidden" value="white" name="color" />
+                </div>
+                <div name="testDict"  data-index="@Guid.NewGuid()">
+                    <input type="hidden" value="bob" name="name" />
+                </div>
+                <div name="testDict"  data-index="@Guid.NewGuid()">
+                    <input type="hidden" value="blue" name="color" />
+                </div>
             </div>
 
         </div>
+
         <div style="">
             <h4>The address is a complex type - lets see how it posts</h4>
             <div class="editor-label">
