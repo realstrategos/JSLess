@@ -24,7 +24,7 @@
              };
 }
 
-<form>
+<form class="clearAfter" data-jsless="@(formButton.ToJsonObject())">
     <h3>UserProfile</h3>
     <input type="button" value="post" data-jsless="@(formButton.ToJsonObject())" />
     <input type="submit" value="submit" />
@@ -55,7 +55,7 @@
                 </div>
                 @foreach (String s in industryList)
                 {
-                    <div data-list="ComplexIndustries" style="padding-bottom: 10px;">
+                    <div data-list="CI" style="padding-bottom: 10px;">
                         <label>
                             <input type="checkbox" name="visible"  @(Model.Industries.Any(o => o == s) ? "checked=\"checked\"" : "")  /></label>
                         <label>
@@ -116,6 +116,12 @@
                         </div>
                     }
                 </div>
+                <div name="testDict"  data-index="@Guid.NewGuid()">
+                    <input type="hidden" value="asdf" name="joe" />
+                </div>
+                <div name="testDict"  data-index="@Guid.NewGuid()">
+                    <input type="hidden" value="asdf" name="bob" />
+                </div>
 
             </div>
         </div>
@@ -143,7 +149,7 @@
             </div>
 
         </div>
-        <div style="position: absolute">
+        <div style="">
             <h4>The address is a complex type - lets see how it posts</h4>
             <div class="editor-label">
                 @Html.LabelFor(model => model.HomeAddress.Address1)
