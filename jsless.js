@@ -1,10 +1,9 @@
 /*!
  * JSLess Library - Core
- * http://jquery.com/
+ * https://github.com/realstrategos/JSLess
  * *
- * Copyright 2012 OptixConnect LLC and other contributors
+ * Copyright 2013 OptixConnect LLC and other contributors
  * Released under the MIT license
- * http://jquery.org/license
  *
  */
 
@@ -144,11 +143,10 @@
 
 /*!
  * JSLess Library - AJAX Invoke
- * http://$.com/
+ * https://github.com/realstrategos/JSLess
  * *
- * Copyright 2012 OptixConnect LLC and other contributors
+ * Copyright 2013 OptixConnect LLC and other contributors
  * Released under the MIT license
- * http://$.org/license
  *
  */
 
@@ -364,11 +362,10 @@
 
 /*!
  * JSLess Library - Builtin Methods
- * http://$.com/
+ * https://github.com/realstrategos/JSLess
  * *
- * Copyright 2012 OptixConnect LLC and other contributors
+ * Copyright 2013 OptixConnect LLC and other contributors
  * Released under the MIT license
- * http://$.org/license
  *
  */
 
@@ -508,9 +505,25 @@
             if ($element.attr("contenteditiable") != null) {
                 result[name] = $element.html();
             }
-            else if ($element.is("input:checked, select[multiple] option:selected")) {
+            else if ($element.is("select[multiple] option:selected")) {
                 result[name] = result[name] || [];
                 result[name].push($element.val());
+            }
+            else if ($element.is("input[data-list]:checkbox")) {
+                result[name] = result[name] || [];
+                if ($element.is(":checked")) {
+                    result[name].push($element.val());
+                }
+            }
+            else if ($element.is("input:checkbox,input:radio")) {
+                if ($element.is("input[value]")) {
+                    if ($element.is(":checked")) {
+                        result[name] = $element.val();
+                    }
+                }
+                else {
+                    result[name] = $element.is(":checked");
+                }
             }
             else if ($element.is("option:selected")) {
                 result[name] = $element.val();
@@ -527,8 +540,8 @@
         },
         processContainer: function ($container) {
             var complex = "[name],[data-list]";
-            var simple = "input[type!='button'][type!='submit'][name],select,textarea,[contenteditable]";
-            
+            var simple = "input[type!='button'][type!='submit'],select,textarea,[contenteditable]";
+
             //get toplevel elements
             var $elements = $container.find(complex + "," + simple).filter(function (index) {
                 var temp = $(this).parentsUntil($container, complex).length == 0;
@@ -541,7 +554,10 @@
             $.each($simple, function (index, element) {
                 var $element = $(element);
                 var name = $element.attr("name");
-                if ($element.attr("data-index") != null) {
+                if ($element.attr("data-list")) {
+                    name = $element.attr("data-list");
+                }
+                else if ($element.attr("data-index") != null) {
                     name += "[" + $element.attr("data-index") + "]";
                 }
                 if (name == null) {
@@ -558,12 +574,15 @@
 
                 if ($element.attr("data-list") != null) {
                     var name = $element.attr("data-list");
-                    result[name] = result[name] || [];                    
+                    result[name] = result[name] || [];
                     result[name].push(temp);
                 }
                 else {
-                    var name = $element.attr("name");                    
-                    result[$element.attr("name")] = temp;
+                    var name = $element.attr("name");
+                    if ($element.attr("data-index") != null) {
+                        name += "[" + $element.attr("data-index") + "]";
+                    }
+                    result[name] = temp;
                 }
             });
 
@@ -695,13 +714,11 @@
 
 /*!
  * JSLess Library - Builtin Behaviors
- * http://jquery.com/
+ * https://github.com/realstrategos/JSLess
  * *
- * Copyright 2012 jQuery Foundation and other contributors
+ * Copyright 2013 OptixConnect LLC and other contributors
  * Released under the MIT license
- * http://jquery.org/license
  *
- * Date: Tue Nov 13 2012 08:20:33 GMT-0500 (Eastern Standard Time)
  */
 
 !function ($) {

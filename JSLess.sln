@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{05703C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D1A28B39-AE5B-460B-B7EC-F52853437057}"
 	ProjectSection(SolutionItems) = preProject
+		jsless.example.js = jsless.example.js
 		jsless.js = jsless.js
 		jsless.min.js = jsless.min.js
 		JSLess.nuspec = JSLess.nuspec

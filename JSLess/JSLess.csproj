@@ -124,7 +124,7 @@
   <ItemGroup>
     <None Include="Scripts\jquery-1.8.3.intellisense.js" />
     <Content Include="Scripts\jsless-invoke.js" />
-    <Content Include="Scripts\jsless.custom.js" />
+    <Content Include="Scripts\jsless.example.js" />
     <Content Include="Scripts\jsless.js" />
     <Content Include="Scripts\jsless-methods.js" />
     <Content Include="Scripts\jquery-1.8.3.js" />

@@ -1,12 +1,12 @@
 ﻿/*!
- * JSLess Library - Custom Behaviors
- * http://jquery.com/
+ * JSLess Library - Example Behaviors
+ * https://github.com/realstrategos/JSLess
  * *
- * Copyright 2012 jQuery Foundation and other contributors
+ * Copyright 2013 OptixConnect LLC and other contributors
  * Released under the MIT license
- * http://jquery.org/license
  *
- * Date: Tue Nov 13 2012 08:20:33 GMT-0500 (Eastern Standard Time)
+ * Rename this file to jsless.custom.js and add your own or 
+ * user contributed behaviors from https://github.com/realstrategos/JSLess/Behaviors
  */
 
 !function ($) {

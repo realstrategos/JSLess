@@ -1,10 +1,9 @@
 /*!
  * JSLess Library - Core
- * http://jquery.com/
+ * https://github.com/realstrategos/JSLess
  * *
- * Copyright 2012 OptixConnect LLC and other contributors
+ * Copyright 2013 OptixConnect LLC and other contributors
  * Released under the MIT license
- * http://jquery.org/license
  *
  */
 

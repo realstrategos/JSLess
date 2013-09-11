@@ -1,12 +1,10 @@
 ﻿/*!
  * JSLess Library - Builtin Behaviors
- * http://jquery.com/
+ * https://github.com/realstrategos/JSLess
  * *
- * Copyright 2012 jQuery Foundation and other contributors
+ * Copyright 2013 OptixConnect LLC and other contributors
  * Released under the MIT license
- * http://jquery.org/license
  *
- * Date: Tue Nov 13 2012 08:20:33 GMT-0500 (Eastern Standard Time)
  */
 
 !function ($) {

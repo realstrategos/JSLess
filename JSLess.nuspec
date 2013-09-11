@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>JSLess</id>
-        <version>0.99</version>
+        <version>1.00</version>
         <authors>Keith Kauffman</authors>
         <owners>Keith Kauffman</owners>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -12,7 +12,7 @@
         </dependencies>
     </metadata>
     <files>
-        <file src="JSLess\Scripts\jsless.custom.js" target="content\Scripts\jsless.custom.js" />
+        <file src="JSLess\Scripts\jsless.example.js" target="content\Scripts\jsless.example.js" />
         <file src="JSLess\Scripts\jsless.js" target="content\Scripts\jsless.js" />
         <file src="JSLess\Scripts\jsless.min.js" target="content\Scripts\jsless.min.js" />
         <file src="JSLess\JSLess.cs" target="content\JSLess.cs" />        
