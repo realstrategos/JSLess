@@ -3,7 +3,8 @@
  * https://github.com/realstrategos/JSLess
  * *
  * Copyright 2013 OptixConnect LLC and other contributors
- * Released under the MIT license
+ * Released under the Creative Commons Attribution NonCommercial (CC-NC)
+ * http://creativecommons.org/licenses/by-nc/3.0/legalcode
  *
  */
 
