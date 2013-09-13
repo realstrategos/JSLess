@@ -5,7 +5,7 @@
     <version>1.02</version>
     <authors>Keith Kauffman</authors>
     <owners>Keith Kauffman</owners>
-    <liscenseUrl>http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode</liscenseUrl>
+    <licenseUrl>http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>JSLess Framework</description>
     <dependencies>
