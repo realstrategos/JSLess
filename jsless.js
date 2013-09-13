@@ -102,6 +102,8 @@
             if (!isSubWidget) {
                 console.log("processed: " + behaviorCounter + " behaviors in " + (new Date() - initTimer) + "ms");
             }
+            $widget.triggerHandler("jsless-widget-complete");
+            $widget.trigger("jsless-widget-loaded");
         },
         processBehavior: function ($widget, $element, behavior, settings) {
             behaviorCounter++;
@@ -137,7 +139,6 @@
         jsless.debug = false; //turn off debugging after load notices
     }, 0);
 }(window.jQuery);
-
 
 
 
@@ -356,7 +357,6 @@
     console.info("Loading Invoke ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
-
 
 
 
@@ -609,9 +609,9 @@
                 var successSelector = jsless.getSelector(settings.onSuccess, $widget, $element);
                 var failSelector = jsless.getSelector(settings.onFail, $widget, $element);
                 var compiledParams = jsless.compileParams(settings.params, $widget, $element);
-                $element.bind(settings.event, function (event) {
+                var onEvent = function (event) {
                     console.debug(settings.name + " event:" + settings.event);
-                    if (settings.eventstop) {
+                    if (settings.eventstop && settings.event != "load") {
                         event.preventDefault(); //prevent form submit
                     }
                     var params = jsless.getParams(compiledParams);
@@ -667,7 +667,13 @@
                             retryCount: 0
                         });
                     }
-                });
+                }
+                if (settings.event == "load") {
+                    $widget.one("jsless-widget-complete", onEvent);
+                }
+                else {
+                    $element.bind(settings.event, onEvent);
+                }
             },
             htmlform: function ($widget, $element, behavior, options) {
                 var settings = $.extend(true, {
@@ -711,7 +717,6 @@
 
 
 
-
 /*!
  * JSLess Library - Builtin Behaviors
  * https://github.com/realstrategos/JSLess
@@ -750,7 +755,7 @@
                 var params = settings.params;
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
-                $eventSource.bind(settings.event, function (event) {
+                var onEvent = function (event) {
                     console.debug(settings.name + " event:" + settings.event);
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
@@ -779,7 +784,13 @@
                             setTimeout(complete, settings.delay);
                         }
                     }
-                });
+                };
+                if (settings.event == "load") {
+                    $widget.one("jsless-widget-complete", onEvent);                    
+                }
+                else {
+                    $element.bind(settings.event, onEvent);
+                }
 
             }
         }
@@ -788,7 +799,6 @@
     console.info("Loading Behaviors ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
-
 
 
 

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>JSLess</id>
-        <version>1.01</version>
+        <version>1.02</version>
         <authors>Keith Kauffman</authors>
         <owners>Keith Kauffman</owners>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
