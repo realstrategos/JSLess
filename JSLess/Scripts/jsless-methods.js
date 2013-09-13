@@ -247,9 +247,9 @@
                 var successSelector = jsless.getSelector(settings.onSuccess, $widget, $element);
                 var failSelector = jsless.getSelector(settings.onFail, $widget, $element);
                 var compiledParams = jsless.compileParams(settings.params, $widget, $element);
-                $element.bind(settings.event, function (event) {
+                var onEvent = function (event) {
                     console.debug(settings.name + " event:" + settings.event);
-                    if (settings.eventstop) {
+                    if (settings.eventstop && settings.event != "load") {
                         event.preventDefault(); //prevent form submit
                     }
                     var params = jsless.getParams(compiledParams);
@@ -305,7 +305,13 @@
                             retryCount: 0
                         });
                     }
-                });
+                }
+                if (settings.event == "load") {
+                    $widget.one("jsless-widget-complete", onEvent);
+                }
+                else {
+                    $element.bind(settings.event, onEvent);
+                }
             },
             htmlform: function ($widget, $element, behavior, options) {
                 var settings = $.extend(true, {

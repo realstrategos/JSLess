@@ -36,7 +36,7 @@
                 var params = settings.params;
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
-                $eventSource.bind(settings.event, function (event) {
+                var onEvent = function (event) {
                     console.debug(settings.name + " event:" + settings.event);
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
@@ -65,7 +65,13 @@
                             setTimeout(complete, settings.delay);
                         }
                     }
-                });
+                };
+                if (settings.event == "load") {
+                    $widget.one("jsless-widget-complete", onEvent);                    
+                }
+                else {
+                    $element.bind(settings.event, onEvent);
+                }
 
             }
         }

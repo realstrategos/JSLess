@@ -102,6 +102,8 @@
             if (!isSubWidget) {
                 console.log("processed: " + behaviorCounter + " behaviors in " + (new Date() - initTimer) + "ms");
             }
+            $widget.triggerHandler("jsless-widget-complete");
+            $widget.trigger("jsless-widget-loaded");
         },
         processBehavior: function ($widget, $element, behavior, settings) {
             behaviorCounter++;
