@@ -40,7 +40,7 @@
                     return $val;
                 }
             }
-            if (typeof selector === 'object' && !selector instanceof jQuery) {
+            if (typeof selector === 'object' && !(selector instanceof jQuery)) {
                 $.extend(settings, selector);
             }
             else {
@@ -83,17 +83,23 @@
             if (params.dynamic) {
                 var dynamicParams = {};
                 $.each(params.dynamic, function (indx, val) {
-                    var settings = $.extend({
-                        target: null,
+                    var settings = {
+                        target: val,
                         object: "jQuery",
                         method: "val",
-                        methodparams: ["value"]
-                    }, val);
+                        methodparams: []
+                    };
+                    if (typeof val === 'object' && !(val instanceof jQuery)) {
+                        $.extend(settings, val);
+                    }
                     settings = jsless.getSelector(settings, $widget, $element);
                     dynamicParams[indx] = function () {
                         var $target = settings.getVal();
-                        var object = window[settings.object];
-                        var result = object[method].apply($target, settings.methodparams);
+                        var object = $target;
+                        if (settings.object != "jQuery") {
+                            object = window[settings.object]; //todo handle .'s
+                        }
+                        var result = object[settings.method].apply($target, settings.methodparams);
                         return result;
                     }
                 });
@@ -353,4 +359,3 @@
     console.info("Loading Methods ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
-
