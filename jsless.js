@@ -3,7 +3,8 @@
  * https://github.com/realstrategos/JSLess
  * *
  * Copyright 2013 OptixConnect LLC and other contributors
- * Released under the MIT license
+ * Released under the Creative Commons Attribution NonCommercial (CC-NC)
+ * http://creativecommons.org/licenses/by-nc/3.0/legalcode
  *
  */
 
@@ -147,7 +148,8 @@
  * https://github.com/realstrategos/JSLess
  * *
  * Copyright 2013 OptixConnect LLC and other contributors
- * Released under the MIT license
+ * Released under the Creative Commons Attribution NonCommercial (CC-NC)
+ * http://creativecommons.org/licenses/by-nc/3.0/legalcode
  *
  */
 
@@ -365,7 +367,8 @@
  * https://github.com/realstrategos/JSLess
  * *
  * Copyright 2013 OptixConnect LLC and other contributors
- * Released under the MIT license
+ * Released under the Creative Commons Attribution NonCommercial (CC-NC)
+ * http://creativecommons.org/licenses/by-nc/3.0/legalcode
  *
  */
 
@@ -401,7 +404,7 @@
                     return $val;
                 }
             }
-            if (typeof selector === 'object' && !selector instanceof jQuery) {
+            if (typeof selector === 'object' && !(selector instanceof jQuery)) {
                 $.extend(settings, selector);
             }
             else {
@@ -444,17 +447,23 @@
             if (params.dynamic) {
                 var dynamicParams = {};
                 $.each(params.dynamic, function (indx, val) {
-                    var settings = $.extend({
-                        target: null,
+                    var settings = {
+                        target: val,
                         object: "jQuery",
                         method: "val",
-                        methodparams: ["value"]
-                    }, val);
+                        methodparams: []
+                    };
+                    if (typeof val === 'object' && !(val instanceof jQuery)) {
+                        $.extend(settings, val);
+                    }
                     settings = jsless.getSelector(settings, $widget, $element);
                     dynamicParams[indx] = function () {
                         var $target = settings.getVal();
-                        var object = window[settings.object];
-                        var result = object[method].apply($target, settings.methodparams);
+                        var object = $target;
+                        if (settings.object != "jQuery") {
+                            object = window[settings.object]; //todo handle .'s
+                        }
+                        var result = object[settings.method].apply($target, settings.methodparams);
                         return result;
                     }
                 });
@@ -715,14 +724,13 @@
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
 
-
-
 /*!
  * JSLess Library - Builtin Behaviors
  * https://github.com/realstrategos/JSLess
  * *
  * Copyright 2013 OptixConnect LLC and other contributors
- * Released under the MIT license
+ * Released under the Creative Commons Attribution NonCommercial (CC-NC)
+ * http://creativecommons.org/licenses/by-nc/3.0/legalcode
  *
  */
 
