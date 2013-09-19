@@ -342,16 +342,16 @@
 
                 if (settings.params.forms.length == 0) {
                     if ($element.is("form")) {
-                        console.debug("element is form");
+                        console.log("element is form");
                         settings.params.forms.push($element);
                     }
                     else {
                         var $form = $element.parentsUntil($widget, "form");
                         if ($form.length == 1) {
-                            console.debug("element is within form");
+                            console.log("element is within form");
                         }
                         else {
-                            console.debug("element is formless");
+                            console.log("element is formless");
                             $form = $element;
                         }
                         settings.params.forms.push($form);

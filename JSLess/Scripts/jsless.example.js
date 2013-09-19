@@ -68,7 +68,7 @@
                             var val = parseFloat($target.val());
                             val += 1;
                             $target.val(val);
-                        });                        
+                        });
                     }
                 });
             }
