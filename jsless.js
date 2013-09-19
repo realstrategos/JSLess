@@ -18,7 +18,9 @@
         var method = consoleMethods[cm];
         console[method] = (function (method) {
             return function (message) {
-                if (jsless.debug) { window.console[method]("JSLess: " + message); }
+                if (jsless.log && method == "log") { window.console[method]("JSLess: " + message); }
+                else if (jsless.debug && method == "debug") { window.console[method]("JSLess: " + message); }
+                else { window.console[method]("JSLess: " + message); }
             }
         })(method);
     }
@@ -36,6 +38,7 @@
 
     window.jsless = $.extend(true, {
         debug: true,
+        log: false,
         console: console
     }, window.jsless || {});
     var _jsless = {
@@ -67,7 +70,7 @@
                 $widget = $element.parents("[data-jsless-widget]").first();
                 if ($widget.length == 0) { //no widget declared, body is outermost widget
                     $widget = $("body");
-                    console.log("declared body as root widget");
+                    console.info("declared body as root widget");
                     $widget.attr("data-jsless-widget", "root");
                 }
                 else {
@@ -122,7 +125,7 @@
                 jsless.behaviors[name]($widget, $element, behavior, settings);
             }
             if (settings.debug) {
-                console.debug("behavior: " + name + " processed in " + (new Date() - startTimer) + "ms"); startTimer = new Date();
+                console.log("behavior: " + name + " processed in " + (new Date() - startTimer) + "ms"); startTimer = new Date();
             }
         }
     }
@@ -138,7 +141,7 @@
         $.fn.toggleProp = function (propName) {
             return this.each(function () {
                 var $this = $(this)
-                $this.prop(propName, !$this.prop(propName));                
+                $this.prop(propName, !$this.prop(propName));
             })
         }
     }
@@ -715,16 +718,16 @@
 
                 if (settings.params.forms.length == 0) {
                     if ($element.is("form")) {
-                        console.debug("element is form");
+                        console.log("element is form");
                         settings.params.forms.push($element);
                     }
                     else {
                         var $form = $element.parentsUntil($widget, "form");
                         if ($form.length == 1) {
-                            console.debug("element is within form");
+                            console.log("element is within form");
                         }
                         else {
-                            console.debug("element is formless");
+                            console.log("element is formless");
                             $form = $element;
                         }
                         settings.params.forms.push($form);
