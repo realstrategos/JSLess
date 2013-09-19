@@ -134,6 +134,15 @@
         })
     }
 
+    if ($.fn.toggleProp === undefined) {
+        $.fn.toggleProp = function (propName) {
+            return this.each(function () {
+                var $this = $(this)
+                $this.prop(propName, !$this.prop(propName));                
+            })
+        }
+    }
+
     console.info("Loading Core...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
     setTimeout(function () {
