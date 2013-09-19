@@ -263,9 +263,9 @@
                         event.preventDefault(); //prevent form submit
                     }
                     var params = jsless.getParams(compiledParams);
-                    $success = successSelector.getVal();
-                    $fail = failSelector.getVal();
-                                        
+                    var $success = successSelector.getVal();
+                    var $fail = failSelector.getVal();
+
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination (validation)
                     if (request === undefined || request) {
                         $element.trigger("jsless-ajax-begin");
@@ -283,8 +283,10 @@
                                     ajaxResponse.success = false;
                                     ajaxResponse.errormessage = $html.attr("data-jsless-error");
                                 }
+                                var selector = successSelector;
                                 var $targets = $success;
                                 if (!ajaxResponse.success) {
+                                    selector = failSelector;
                                     $targets = $fail;
                                     $element.trigger("jsless-ajax-beforefail");
                                     $targets.triggerHandler("jsless-" + settings.name + "-beforefail");
@@ -294,7 +296,7 @@
                                     $targets.triggerHandler("jsless-" + settings.name + "-beforesuccess");
                                 }
                                 $element.trigger("jsless-ajax-beforecomplete");
-                                $targets.triggerHandler("jsless-" + settings.name + "-beforecomplete");                                
+                                $targets.triggerHandler("jsless-" + settings.name + "-beforecomplete");
                                 $.each($targets, function (index, elem) {
                                     var $target = $(elem);
                                     var $data = $html.clone();
