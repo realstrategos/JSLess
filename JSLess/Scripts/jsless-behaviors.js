@@ -38,7 +38,7 @@
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
                 var onEvent = function (event) {
-                    console.debug(settings.name + " event:" + settings.event);
+                    console.debug(settings.name + " event:" + settings.event + " method: " + settings.method);
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
                         var $target = targetSelector.getVal();
@@ -47,13 +47,13 @@
                             $element.triggerHandler("jsless-" + settings.name + "-beforecomplete");
                             var object = $target;
                             var method = $target[settings.method];
-                            if (settings.object != "jQuery") {                                
+                            if (settings.object != "jQuery") {
                                 params.unshift($target); //target is the first parameter
                                 var object = window;
                                 $.each(settings.object.split("."), function (indx, oname) {
                                     object = object[oname];
                                 });
-                                var method = object[settings.method];                                
+                                var method = object[settings.method];
                             }
                             var result = method.apply(object, params);
 
@@ -68,7 +68,7 @@
                     }
                 };
                 if (settings.event == "load") {
-                    $widget.one("jsless-widget-complete", onEvent);                    
+                    $widget.one("jsless-widget-complete", onEvent);
                 }
                 else {
                     $element.bind(settings.event, onEvent);
