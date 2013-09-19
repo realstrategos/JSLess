@@ -615,7 +615,7 @@
                     event: 'click',
                     eventstop: false,
                     onSuccess: 'widget',
-                    onFail: 'widget',
+                    onFail: null,
                     params: {
                         dynamic: {},
                         forms: []
@@ -623,6 +623,9 @@
                 }, jsless.settings.method, options.method, behavior);
                 if (!settings.url) {
                     console.error("html url not specified: " + JSON.stringify(settings));
+                }
+                if (!settings.onFail) {
+                    settings.onFail = settings.onSuccess;
                 }
                 var successSelector = jsless.getSelector(settings.onSuccess, $widget, $element);
                 var failSelector = jsless.getSelector(settings.onFail, $widget, $element);
@@ -633,9 +636,12 @@
                         event.preventDefault(); //prevent form submit
                     }
                     var params = jsless.getParams(compiledParams);
-                    $element.trigger("jsless-ajax-begin");
+                    $success = successSelector.getVal();
+                    $fail = failSelector.getVal();
+                                        
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination (validation)
                     if (request === undefined || request) {
+                        $element.trigger("jsless-ajax-begin");
                         jsless.invoke({
                             url: settings.url,
                             category: "normal", //used to group calls to segment aborting if necessary
@@ -650,37 +656,34 @@
                                     ajaxResponse.success = false;
                                     ajaxResponse.errormessage = $html.attr("data-jsless-error");
                                 }
-
-                                var selector = successSelector;
+                                var $targets = $success;
                                 if (!ajaxResponse.success) {
+                                    $targets = $fail;
                                     $element.trigger("jsless-ajax-beforefail");
-                                    $element.triggerHandler("jsless-" + settings.name + "-beforefail");
-                                    selector = failSelector;
+                                    $targets.triggerHandler("jsless-" + settings.name + "-beforefail");
                                 }
                                 else {
                                     $element.trigger("jsless-ajax-beforesuccess");
-                                    $element.triggerHandler("jsless-" + settings.name + "-beforesuccess");
+                                    $targets.triggerHandler("jsless-" + settings.name + "-beforesuccess");
                                 }
                                 $element.trigger("jsless-ajax-beforecomplete");
-                                $element.triggerHandler("jsless-" + settings.name + "-beforecomplete");
-                                var $targets = selector.getVal();
+                                $targets.triggerHandler("jsless-" + settings.name + "-beforecomplete");                                
                                 $.each($targets, function (index, elem) {
                                     var $target = $(elem);
                                     var $data = $html.clone();
                                     $target[selector.mode]($data);
                                     $data.jsless(options);
                                 });
-
                                 if (ajaxResponse.success) {
                                     $element.trigger("jsless-ajax-success");
-                                    $element.triggerHandler("jsless-" + settings.name + "-success");
+                                    $targets.triggerHandler("jsless-" + settings.name + "-success");
                                 }
                                 else {
                                     $element.trigger("jsless-ajax-fail");
-                                    $element.triggerHandler("jsless-" + settings.name + "-fail");
+                                    $targets.triggerHandler("jsless-" + settings.name + "-fail");
                                 }
                                 $element.trigger("jsless-ajax-complete");
-                                $element.triggerHandler("jsless-" + settings.name + "-complete");
+                                $targets.triggerHandler("jsless-" + settings.name + "-complete");
                             },
                             retryCount: 0
                         });
@@ -701,7 +704,7 @@
                     event: $element.is("form") ? 'submit' : 'click',
                     eventstop: $element.is("form"),
                     onSuccess: 'widget',
-                    onFail: 'widget',
+                    onFail: null,
                     params: {
                         dynamic: {},
                         forms: []
