@@ -54,6 +54,9 @@
                 else if (settings.scope == "self") {
                     $scope = $element;
                 }
+                else if (settings.scope == "document") {
+                    $scope = $(document);
+                }
                 else {
                     $scope = $(settings.scope);
                 }
