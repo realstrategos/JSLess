@@ -71,6 +71,7 @@
                 $val = $element;
             }
             else if (selector == "widget") {
+                settings.mode = "replaceWith";
                 $val = $widget;
             }
             else if (settings.latebind) {
