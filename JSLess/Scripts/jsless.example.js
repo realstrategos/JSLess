@@ -71,6 +71,41 @@
                         });
                     }
                 });
+            },
+            htmlnext: function ($widget, $element, behavior, options) {
+                var settings = $.extend(true, {
+                    name: 'htmlnext',
+                    next: '[data-history="next"]',
+                    prev: '[data-history="prev"]',
+                    back: '[data-history="back"]',
+                    root: '[data-jsless-widget]',
+                    level: 1
+                }, jsless.settings.method, options.method, behavior);
+
+                var $root = $($element.parents(settings.root)[settings.level - 1]);
+
+                var target = jsless.getSelector(settings.next, $root, $element);
+                var compiledParams = jsless.compileParams(settings.params, $widget, $element);
+                var onEvent = function (event) {
+                    var $target = target.getVal();
+                    var $prev = $root.find(settings.prev);
+                    $target.show();
+                    $prev.hide();
+                    $target.one("jsless-htmlnext-complete", function () {
+                        $target.find(settings.back).click(function () {
+                            $prev.show();
+                            $target.hide();
+                        });
+                    });
+                    jsless._methods.htmlevent(event, $widget, $element, settings, target, target, compiledParams, options);
+                }
+                if (settings.event == "load") {
+                    $widget.one("jsless-widget-complete", onEvent);
+                }
+                else {
+                    $element.bind(settings.event, onEvent);
+                }
+
             }
         }
     }

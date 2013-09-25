@@ -38,7 +38,7 @@
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
                 var onEvent = function (event) {
-                    console.debug(settings.name + " event:" + settings.event + " method: " + settings.method);
+                    console.debug(settings.name + " event:" + settings.event + " method: " + settings.method + "\r\n\t :: " + JSON.stringify(settings));
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
                         var $target = targetSelector.getVal();
@@ -73,7 +73,60 @@
                 else {
                     $element.bind(settings.event, onEvent);
                 }
+            },
+            keyclick: function ($widget, $element, behavior, options) {
+                /*
+                /* Used to bind a keydown event (default is enter key) to fire a click event on the given target(s)
+                */
+                var settings = $.extend(true, {
+                    name: 'keyclick',
+                    event: 'keydown',
+                    target: 'self',
+                    keycode: 13
+                }, jsless.settings.behavior, options.behavior, behavior);
 
+                var params = settings.params;
+                var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
+                var targetSelector = jsless.getSelector(settings.target, $widget, $element);
+                $eventSource.bind(settings.event, function (event) {
+                    console.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + JSON.stringify(settings));
+                    var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
+                    if (request === undefined || request) {
+                        var code = (event.keyCode ? event.keyCode : event.which);
+                        if (code == settings.keycode) {
+                            event.preventDefault();
+                            var $targets = targetSelector.getVal();
+                            $targets.triggerHandler("click");
+                        }
+                    }
+                });
+            },
+            toggleClass: function ($widget, $element, behavior, options) {
+                /*
+                /* Used to add a class to the given eventSource and remove from the target(s) (aka menu selector)
+                */
+                var settings = $.extend(true, {
+                    name: 'toggleClass',
+                    className: null
+                }, jsless.settings.behavior, options.behavior, behavior);
+                if (!settings.className) {
+                    console.error("className not specified: " + JSON.stringify(settings));
+                }
+                var params = settings.params;
+                var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
+                var targetSelector = jsless.getSelector(settings.target, $widget, $element);
+                $eventSource.bind(settings.event, function (event) {
+                    console.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + JSON.stringify(settings));
+                    var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
+                    if (request === undefined || request) {
+                        var $target = targetSelector.getVal();//THIS IS THE TARGET COLLECTION OF CHILDREN, I.E. <li>'s
+                        var $source = $(event.target).parents(settings.target).addBack(settings.target).first();
+                        var className = settings.className;
+
+                        $target.removeClass(className);
+                        $source.addClass(className);
+                    }
+                });
             }
         }
     }
