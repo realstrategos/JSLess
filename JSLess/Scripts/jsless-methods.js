@@ -239,7 +239,7 @@
         },
         _methods: {
             html: function ($widget, $element, behavior, options) {
-                var settings = $.extend(true, {
+                var settings = $.extend(true, jsless.settings.method, options.method, {
                     name: 'html',
                     url: null,
                     method: 'GET',
@@ -251,7 +251,7 @@
                         dynamic: {},
                         forms: []
                     }
-                }, jsless.settings.method, options.method, behavior);
+                }, behavior);
                 if (!settings.url) {
                     console.error("html url not specified: " + JSON.stringify(settings));
                 }
@@ -334,7 +334,7 @@
                 }
             },
             htmlform: function ($widget, $element, behavior, options) {
-                var settings = $.extend(true, {
+                var settings = $.extend(true, jsless.settings.method, options.method, {
                     name: 'html',
                     url: null,
                     method: 'GET',
@@ -346,7 +346,7 @@
                         dynamic: {},
                         forms: []
                     }
-                }, jsless.settings.method, options.method, behavior);
+                }, behavior);
 
                 if (settings.params.forms.length == 0) {
                     if ($element.is("form")) {

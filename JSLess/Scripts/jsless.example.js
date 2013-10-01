@@ -29,31 +29,31 @@
         },
         behaviors: {
             show: function ($widget, $element, behavior, options) {
-                var settings = $.extend(true, {
+                var settings = $.extend(true, jsless.settings.behavior, options.behavior, {
                     name: 'show',
                     object: "jQuery",
                     method: 'show',
                     params: []
-                }, jsless.settings.behavior, options.behavior, behavior);
+                }, behavior);
 
                 //shortcut for execute
                 jsless.behaviors.execute($widget, $element, settings, options);
             },
             hide: function ($widget, $element, behavior, options) {
-                var settings = $.extend(true, {
+                var settings = $.extend(true, jsless.settings.behavior, options.behavior, {
                     name: 'hide',
                     object: "jQuery",
                     method: 'hide',
                     params: []
-                }, jsless.settings.behavior, options.behavior, behavior);
+                }, behavior);
 
                 //shortcut for execute
                 jsless.behaviors.execute($widget, $element, settings, options);
             },
             plus1: function ($widget, $element, behavior, options) {
-                var settings = $.extend(true, {
+                var settings = $.extend(true, jsless.settings.behavior, options.behavior, {
                     name: 'plus1',
-                }, jsless.settings.behavior, options.behavior, behavior);
+                }, behavior);
 
                 var params = settings.params;
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
@@ -73,14 +73,14 @@
                 });
             },
             htmlnext: function ($widget, $element, behavior, options) {
-                var settings = $.extend(true, {
+                var settings = $.extend(true, jsless.settings.method, options.method, {
                     name: 'htmlnext',
                     next: '[data-history="next"]',
                     prev: '[data-history="prev"]',
                     back: '[data-history="back"]',
                     root: '[data-jsless-widget]',
                     level: 1
-                }, jsless.settings.method, options.method, behavior);
+                }, behavior);
 
                 var $root = $($element.parents(settings.root)[settings.level - 1]);
 
