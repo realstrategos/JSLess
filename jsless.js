@@ -501,7 +501,16 @@
             var dynamicParams = {};
             if (params.dynamic) {
                 $.each(params.dynamic, function (indx, val) {
-                    dynamicParams[indx] = val();
+                    var obj = dynamicParams;
+                    var name = indx;
+                    $.each(indx.split(".").shift(), function (objIndx, objName) {
+                        if (obj[name] === undefined) {
+                            obj[name] = {};
+                        }
+                        obj = obj[name];
+                        name = objName;
+                    });
+                    obj[name] = val();
                 });
                 delete params.dynamic;
             }
@@ -523,7 +532,7 @@
                 temp[name] = val;
             });
 
-            var result = $.extend({}, forms, dynamicParams, temp);
+            var result = $.extend(true, {}, forms, dynamicParams, temp);
             return result;
         },
         getValue: function ($element, result, name) {
@@ -772,7 +781,8 @@
                 eventSource: 'self',
                 target: 'self',
                 delay: -1,
-                params: []
+                params: [],
+                dynamic: []
             }
         },
         behaviors: {
@@ -786,6 +796,7 @@
                     console.error("execute method not specified: " + JSON.stringify(settings));
                 }
                 var params = settings.params;
+                var compiledParams = jsless.compileParams(settings.dynamic, $widget, $element);
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
                 var onEvent = function (event) {
@@ -793,6 +804,15 @@
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
                         var $target = targetSelector.getVal();
+                        var dynamicParams = jsless.getParams(compiledParams);
+                        $.each(dynamicParams, function (indx, indxVal) {
+                            if (typeof dynamicParams[indx] === "object") {
+                                $.extend(true, params[indx], dynamicParams[indx]);
+                            }
+                            else {
+                                params[indx] = dynamicParams[indx];
+                            }
+                        });
 
                         var complete = function () {
                             $element.triggerHandler("jsless-" + settings.name + "-beforecomplete");
