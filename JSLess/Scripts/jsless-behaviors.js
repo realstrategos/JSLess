@@ -21,7 +21,8 @@
                 eventSource: 'self',
                 target: 'self',
                 delay: -1,
-                params: []
+                params: [],
+                dynamic: []
             }
         },
         behaviors: {
@@ -35,6 +36,7 @@
                     console.error("execute method not specified: " + JSON.stringify(settings));
                 }
                 var params = settings.params;
+                var compiledParams = jsless.compileParams(settings.dynamic, $widget, $element);
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
                 var onEvent = function (event) {
@@ -42,6 +44,15 @@
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
                         var $target = targetSelector.getVal();
+                        var dynamicParams = jsless.getParams(compiledParams);
+                        $.each(dynamicParams, function (indx, indxVal) {
+                            if (typeof dynamicParams[indx] === "object") {
+                                $.extend(true, params[indx], dynamicParams[indx]);
+                            }
+                            else {
+                                params[indx] = dynamicParams[indx];
+                            }
+                        });
 
                         var complete = function () {
                             $element.triggerHandler("jsless-" + settings.name + "-beforecomplete");

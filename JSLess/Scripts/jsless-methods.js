@@ -125,7 +125,16 @@
             var dynamicParams = {};
             if (params.dynamic) {
                 $.each(params.dynamic, function (indx, val) {
-                    dynamicParams[indx] = val();
+                    var obj = dynamicParams;
+                    var name = indx;
+                    $.each(indx.split(".").shift(), function (objIndx, objName) {
+                        if (obj[name] === undefined) {
+                            obj[name] = {};
+                        }
+                        obj = obj[name];
+                        name = objName;
+                    });
+                    obj[name] = val();
                 });
                 delete params.dynamic;
             }
@@ -147,7 +156,7 @@
                 temp[name] = val;
             });
 
-            var result = $.extend({}, forms, dynamicParams, temp);
+            var result = $.extend(true, {}, forms, dynamicParams, temp);
             return result;
         },
         getValue: function ($element, result, name) {
