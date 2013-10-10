@@ -11,16 +11,16 @@
 !function ($) {
     "use strict"; // jshint ;_;
 
-    window.console = window.console || { log: function () { }, error: function (e) { alert(e); }, info: function () { }, warn: function () { }, debug: function () { } };
+    var console = window.console || { log: function () { }, error: function (e) { alert(e); }, info: function () { }, warn: function () { }, debug: function () { } };
     var consoleMethods = ["log", "error", "warn", "debug", "info"];
-    var console = {};
+    var logger = {};
     for (var cm in consoleMethods) {
         var method = consoleMethods[cm];
-        console[method] = (function (method) {
+        logger[method] = (function (method) {
             return function (message) {
-                if (jsless.log && method == "log") { window.console[method]("JSLess: " + message); }
-                else if (jsless.debug && method == "debug") { window.console[method]("JSLess: " + message); }
-                else { window.console[method]("JSLess: " + message); }
+                if (method == "log") { if (jsless.log) console[method]("JSLess: " + message); }
+                else if (method == "debug") { if (jsless.debug) console[method]("JSLess: " + message); }
+                else { console[method]("JSLess: " + message); }
             }
         })(method);
     }
@@ -37,9 +37,9 @@
     var behaviorCounter = 0;
 
     window.jsless = $.extend(true, {
-        debug: true,
-        log: false,
-        console: console
+        debug: false,
+        log: true,
+        logger: logger
     }, window.jsless || {});
     var _jsless = {
         settings: {
@@ -70,11 +70,11 @@
                 $widget = $element.parents("[data-jsless-widget]").first();
                 if ($widget.length == 0) { //no widget declared, body is outermost widget
                     $widget = $("body");
-                    console.info("declared body as root widget");
+                    logger.info("declared body as root widget");
                     $widget.attr("data-jsless-widget", "root");
                 }
                 else {
-                    console.log("missing data-jsless-widget, treating as a partial");
+                    logger.log("missing data-jsless-widget, treating as a partial");
                 }
             }
             var $subWidgets = $element.find("[data-jsless-widget]");
@@ -87,7 +87,7 @@
                 var temp = $(this).parentsUntil($element.parent(), "[data-jsless-widget]").length <= 1;
                 return temp;
             });
-            console.log("found: " + $targets.length + " elements and " + $subWidgets.length + " sub widgets ...");
+            logger.log("found: " + $targets.length + " elements and " + $subWidgets.length + " sub widgets ...");
 
             $targets.each(function (tIndex, target) {
                 var $target = $(target);
@@ -98,13 +98,13 @@
                 });
             });
             $subWidgets.each(function (tIndex, target) {
-                console.log("processing subwidget ...");
+                logger.log("processing subwidget ...");
                 var $target = $(target);
                 jsless.process($target, options, true);
             });
 
             if (!isSubWidget) {
-                console.log("processed: " + behaviorCounter + " behaviors in " + (new Date() - initTimer) + "ms");
+                logger.log("processed: " + behaviorCounter + " behaviors in " + (new Date() - initTimer) + "ms");
             }
             $widget.triggerHandler("jsless-widget-complete");
             $widget.trigger("jsless-widget-loaded");
@@ -117,7 +117,7 @@
                     jsless._methods[name]($widget, $element, behavior, settings);
                 }
                 else {
-                    console.error("Behavior not found: " + name);
+                    logger.error("Behavior not found: " + name);
                     return;
                 }
             }
@@ -125,7 +125,7 @@
                 jsless.behaviors[name]($widget, $element, behavior, settings);
             }
             if (settings.debug) {
-                console.log("behavior: " + name + " processed in " + (new Date() - startTimer) + "ms"); startTimer = new Date();
+                logger.debug("behavior: " + name + " processed in " + (new Date() - startTimer) + "ms"); startTimer = new Date();
             }
         }
     }
@@ -146,7 +146,7 @@
         }
     }
 
-    console.info("Loading Core...");
+    logger.info("Loading Core...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
     setTimeout(function () {
         jsless.debug = false; //turn off debugging after load notices
@@ -168,7 +168,7 @@
 !function ($) {
     "use strict"; // jshint ;_;
 
-    var console = jsless.console;
+    var logger = jsless.logger;
 
     var ajaxResponse = function (invoker, XMLHttpRequest) {
         this.invoker = invoker;
@@ -264,7 +264,7 @@
                 this._running = false;
                 //Session Timeout
                 if (XMLHttpRequest.status == 401) {
-                    console.warn("Attempted to access an UnAuthorized Page");
+                    logger.warn("Attempted to access an UnAuthorized Page");
                     $(window).trigger("invoke-authorizationerror", this._request);
                     return;
                 }
@@ -368,7 +368,7 @@
         }
     }
 
-    console.info("Loading Invoke ...");
+    logger.info("Loading Invoke ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
 
@@ -387,7 +387,7 @@
 !function ($) {
     "use strict"; // jshint ;_;
 
-    var console = jsless.console;
+    var logger = jsless.logger;
 
     var _jsless = {
         settings: {
@@ -598,7 +598,7 @@
                     name += "[" + $element.attr("data-index") + "]";
                 }
                 if (name == null) {
-                    console.warn("element has no name: " + $element[0].outerHTML);
+                    logger.warn("element has no name: " + $element[0].outerHTML);
                     return;
                 }
                 var temp = jsless.getValue($element, result, name);
@@ -641,7 +641,7 @@
                     }
                 }, behavior);
                 if (!settings.url) {
-                    console.error("html url not specified: " + JSON.stringify(settings));
+                    logger.error("html url not specified: " + JSON.stringify(settings));
                 }
                 if (!settings.onFail) {
                     settings.onFail = settings.onSuccess;
@@ -661,7 +661,7 @@
                 }
             },
             htmlevent: function (event, $widget, $element, settings, successSelector, failSelector, compiledParams, options) {
-                console.debug(settings.name + " event:" + settings.event);
+                logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + JSON.stringify(settings));
                 if (settings.eventstop && settings.event != "load") {
                     event.preventDefault(); //prevent form submit
                 }
@@ -738,16 +738,16 @@
 
                 if (settings.params.forms.length == 0) {
                     if ($element.is("form")) {
-                        console.log("element is form");
+                        logger.log("element is form");
                         settings.params.forms.push($element);
                     }
                     else {
                         var $form = $element.parentsUntil($widget, "form");
                         if ($form.length == 1) {
-                            console.log("element is within form");
+                            logger.log("element is within form");
                         }
                         else {
-                            console.log("element is formless");
+                            logger.log("element is formless");
                             $form = $element;
                         }
                         settings.params.forms.push($form);
@@ -757,7 +757,7 @@
             }
         }
     }
-    console.info("Loading Methods ...");
+    logger.info("Loading Methods ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
 
@@ -774,7 +774,7 @@
 !function ($) {
     "use strict"; // jshint ;_;
 
-    var console = jsless.console;
+    var logger = jsless.logger;
 
     var _jsless = {
         settings: {
@@ -797,7 +797,7 @@
                     method: null
                 }, behavior);
                 if (!settings.method) {
-                    console.error("execute method not specified: " + JSON.stringify(settings));
+                    logger.error("execute method not specified: " + JSON.stringify(settings));
                 }
                 var params = $.extend({}, settings.params);
                 var compiledParams = jsless.compileParams(settings.dynamic, $widget, $element);
@@ -807,7 +807,7 @@
                     if (settings.stopEventPropagation) {
                         event.stopPropagation();
                     }
-                    console.debug(settings.name + " event:" + settings.event + " method: " + settings.method + "\r\n\t :: " + JSON.stringify(settings));
+                    logger.debug(settings.name + " event:" + settings.event + " method: " + settings.method + "\r\n\t :: " + JSON.stringify(settings));
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
                         var $target = targetSelector.getVal();
@@ -874,7 +874,7 @@
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
                 $eventSource.bind(settings.event, function (event) {
-                    console.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + JSON.stringify(settings));
+                    logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + JSON.stringify(settings));
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
                         var code = (event.keyCode ? event.keyCode : event.which);
@@ -895,13 +895,13 @@
                     className: null
                 }, behavior);
                 if (!settings.className) {
-                    console.error("className not specified: " + JSON.stringify(settings));
+                    logger.error("className not specified: " + JSON.stringify(settings));
                 }
                 var params = settings.params;
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
                 $eventSource.bind(settings.event, function (event) {
-                    console.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + JSON.stringify(settings));
+                    logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + JSON.stringify(settings));
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
                         var $target = targetSelector.getVal();//THIS IS THE TARGET COLLECTION OF CHILDREN, I.E. <li>'s
@@ -916,7 +916,7 @@
         }
     }
 
-    console.info("Loading Behaviors ...");
+    logger.info("Loading Behaviors ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
 

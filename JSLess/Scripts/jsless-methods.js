@@ -11,7 +11,7 @@
 !function ($) {
     "use strict"; // jshint ;_;
 
-    var console = jsless.console;
+    var logger = jsless.logger;
 
     var _jsless = {
         settings: {
@@ -222,7 +222,7 @@
                     name += "[" + $element.attr("data-index") + "]";
                 }
                 if (name == null) {
-                    console.warn("element has no name: " + $element[0].outerHTML);
+                    logger.warn("element has no name: " + $element[0].outerHTML);
                     return;
                 }
                 var temp = jsless.getValue($element, result, name);
@@ -265,7 +265,7 @@
                     }
                 }, behavior);
                 if (!settings.url) {
-                    console.error("html url not specified: " + JSON.stringify(settings));
+                    logger.error("html url not specified: " + JSON.stringify(settings));
                 }
                 if (!settings.onFail) {
                     settings.onFail = settings.onSuccess;
@@ -285,7 +285,7 @@
                 }
             },
             htmlevent: function (event, $widget, $element, settings, successSelector, failSelector, compiledParams, options) {
-                console.debug(settings.name + " event:" + settings.event);
+                logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + JSON.stringify(settings));
                 if (settings.eventstop && settings.event != "load") {
                     event.preventDefault(); //prevent form submit
                 }
@@ -362,16 +362,16 @@
 
                 if (settings.params.forms.length == 0) {
                     if ($element.is("form")) {
-                        console.log("element is form");
+                        logger.log("element is form");
                         settings.params.forms.push($element);
                     }
                     else {
                         var $form = $element.parentsUntil($widget, "form");
                         if ($form.length == 1) {
-                            console.log("element is within form");
+                            logger.log("element is within form");
                         }
                         else {
-                            console.log("element is formless");
+                            logger.log("element is formless");
                             $form = $element;
                         }
                         settings.params.forms.push($form);
@@ -381,6 +381,6 @@
             }
         }
     }
-    console.info("Loading Methods ...");
+    logger.info("Loading Methods ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);

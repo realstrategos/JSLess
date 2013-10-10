@@ -11,16 +11,16 @@
 !function ($) {
     "use strict"; // jshint ;_;
 
-    window.console = window.console || { log: function () { }, error: function (e) { alert(e); }, info: function () { }, warn: function () { }, debug: function () { } };
+    var console = window.console || { log: function () { }, error: function (e) { alert(e); }, info: function () { }, warn: function () { }, debug: function () { } };
     var consoleMethods = ["log", "error", "warn", "debug", "info"];
-    var console = {};
+    var logger = {};
     for (var cm in consoleMethods) {
         var method = consoleMethods[cm];
-        console[method] = (function (method) {
+        logger[method] = (function (method) {
             return function (message) {
-                if (jsless.log && method == "log") { window.console[method]("JSLess: " + message); }
-                else if (jsless.debug && method == "debug") { window.console[method]("JSLess: " + message); }
-                else { window.console[method]("JSLess: " + message); }
+                if (method == "log") { if (jsless.log) console[method]("JSLess: " + message); }
+                else if (method == "debug") { if (jsless.debug) console[method]("JSLess: " + message); }
+                else { console[method]("JSLess: " + message); }
             }
         })(method);
     }
@@ -37,9 +37,9 @@
     var behaviorCounter = 0;
 
     window.jsless = $.extend(true, {
-        debug: true,
-        log: false,
-        console: console
+        debug: false,
+        log: true,
+        logger: logger
     }, window.jsless || {});
     var _jsless = {
         settings: {
@@ -70,11 +70,11 @@
                 $widget = $element.parents("[data-jsless-widget]").first();
                 if ($widget.length == 0) { //no widget declared, body is outermost widget
                     $widget = $("body");
-                    console.info("declared body as root widget");
+                    logger.info("declared body as root widget");
                     $widget.attr("data-jsless-widget", "root");
                 }
                 else {
-                    console.log("missing data-jsless-widget, treating as a partial");
+                    logger.log("missing data-jsless-widget, treating as a partial");
                 }
             }
             var $subWidgets = $element.find("[data-jsless-widget]");
@@ -87,7 +87,7 @@
                 var temp = $(this).parentsUntil($element.parent(), "[data-jsless-widget]").length <= 1;
                 return temp;
             });
-            console.log("found: " + $targets.length + " elements and " + $subWidgets.length + " sub widgets ...");
+            logger.log("found: " + $targets.length + " elements and " + $subWidgets.length + " sub widgets ...");
 
             $targets.each(function (tIndex, target) {
                 var $target = $(target);
@@ -98,13 +98,13 @@
                 });
             });
             $subWidgets.each(function (tIndex, target) {
-                console.log("processing subwidget ...");
+                logger.log("processing subwidget ...");
                 var $target = $(target);
                 jsless.process($target, options, true);
             });
 
             if (!isSubWidget) {
-                console.log("processed: " + behaviorCounter + " behaviors in " + (new Date() - initTimer) + "ms");
+                logger.log("processed: " + behaviorCounter + " behaviors in " + (new Date() - initTimer) + "ms");
             }
             $widget.triggerHandler("jsless-widget-complete");
             $widget.trigger("jsless-widget-loaded");
@@ -117,7 +117,7 @@
                     jsless._methods[name]($widget, $element, behavior, settings);
                 }
                 else {
-                    console.error("Behavior not found: " + name);
+                    logger.error("Behavior not found: " + name);
                     return;
                 }
             }
@@ -125,7 +125,7 @@
                 jsless.behaviors[name]($widget, $element, behavior, settings);
             }
             if (settings.debug) {
-                console.log("behavior: " + name + " processed in " + (new Date() - startTimer) + "ms"); startTimer = new Date();
+                logger.debug("behavior: " + name + " processed in " + (new Date() - startTimer) + "ms"); startTimer = new Date();
             }
         }
     }
@@ -146,7 +146,7 @@
         }
     }
 
-    console.info("Loading Core...");
+    logger.info("Loading Core...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
     setTimeout(function () {
         jsless.debug = false; //turn off debugging after load notices

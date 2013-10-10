@@ -11,7 +11,7 @@
 !function ($) {
     "use strict"; // jshint ;_;
 
-    var console = jsless.console;
+    var logger = jsless.logger;
 
     var _jsless = {
         settings: {
@@ -34,7 +34,7 @@
                     method: null
                 }, behavior);
                 if (!settings.method) {
-                    console.error("execute method not specified: " + JSON.stringify(settings));
+                    logger.error("execute method not specified: " + JSON.stringify(settings));
                 }
                 var params = $.extend({}, settings.params);
                 var compiledParams = jsless.compileParams(settings.dynamic, $widget, $element);
@@ -44,7 +44,7 @@
                     if (settings.stopEventPropagation) {
                         event.stopPropagation();
                     }
-                    console.debug(settings.name + " event:" + settings.event + " method: " + settings.method + "\r\n\t :: " + JSON.stringify(settings));
+                    logger.debug(settings.name + " event:" + settings.event + " method: " + settings.method + "\r\n\t :: " + JSON.stringify(settings));
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
                         var $target = targetSelector.getVal();
@@ -111,7 +111,7 @@
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
                 $eventSource.bind(settings.event, function (event) {
-                    console.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + JSON.stringify(settings));
+                    logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + JSON.stringify(settings));
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
                         var code = (event.keyCode ? event.keyCode : event.which);
@@ -132,13 +132,13 @@
                     className: null
                 }, behavior);
                 if (!settings.className) {
-                    console.error("className not specified: " + JSON.stringify(settings));
+                    logger.error("className not specified: " + JSON.stringify(settings));
                 }
                 var params = settings.params;
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
                 $eventSource.bind(settings.event, function (event) {
-                    console.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + JSON.stringify(settings));
+                    logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + JSON.stringify(settings));
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
                         var $target = targetSelector.getVal();//THIS IS THE TARGET COLLECTION OF CHILDREN, I.E. <li>'s
@@ -153,7 +153,7 @@
         }
     }
 
-    console.info("Loading Behaviors ...");
+    logger.info("Loading Behaviors ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
 

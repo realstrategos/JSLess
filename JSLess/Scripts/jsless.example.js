@@ -14,7 +14,7 @@
 !function ($) {
     "use strict"; // jshint ;_;
 
-    var console = jsless.console;
+    var logger = jsless.logger;
 
     var _jsless = {
         settings: {
@@ -59,7 +59,7 @@
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
                 $eventSource.bind(settings.event, function (event) {
-                    console.debug(settings.name + " event:" + settings.event);
+                    logger.debug(settings.name + " event:" + settings.event);
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
                         var $targets = targetSelector.getVal();
@@ -110,7 +110,7 @@
         }
     }
 
-    console.info("Loading Custom Behaviors ...");
+    logger.info("Loading Custom Behaviors ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
 

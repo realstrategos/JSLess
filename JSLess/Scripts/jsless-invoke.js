@@ -11,7 +11,7 @@
 !function ($) {
     "use strict"; // jshint ;_;
 
-    var console = jsless.console;
+    var logger = jsless.logger;
 
     var ajaxResponse = function (invoker, XMLHttpRequest) {
         this.invoker = invoker;
@@ -107,7 +107,7 @@
                 this._running = false;
                 //Session Timeout
                 if (XMLHttpRequest.status == 401) {
-                    console.warn("Attempted to access an UnAuthorized Page");
+                    logger.warn("Attempted to access an UnAuthorized Page");
                     $(window).trigger("invoke-authorizationerror", this._request);
                     return;
                 }
@@ -211,7 +211,7 @@
         }
     }
 
-    console.info("Loading Invoke ...");
+    logger.info("Loading Invoke ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
 
