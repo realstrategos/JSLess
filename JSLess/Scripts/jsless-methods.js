@@ -127,7 +127,10 @@
                 $.each(params.dynamic, function (indx, val) {
                     var obj = dynamicParams;
                     var name = indx;
-                    $.each(indx.split(".").shift(), function (objIndx, objName) {
+                    $.each(indx.split("."), function (objIndx, objName) {
+                        if (objIndx == 0) {
+                            return true;
+                        }
                         if (obj[name] === undefined) {
                             obj[name] = {};
                         }
