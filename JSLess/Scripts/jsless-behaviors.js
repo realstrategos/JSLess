@@ -22,7 +22,8 @@
                 target: 'self',
                 delay: -1,
                 params: [],
-                dynamic: []
+                dynamic: [],
+                stopEventPropagation: false
             }
         },
         behaviors: {
@@ -40,6 +41,9 @@
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
                 var onEvent = function (event) {
+                    if (settings.stopEventPropagation) {
+                        event.stopPropagation();
+                    }
                     console.debug(settings.name + " event:" + settings.event + " method: " + settings.method + "\r\n\t :: " + JSON.stringify(settings));
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
@@ -66,8 +70,8 @@
                                 if (params[indx] == "@target") {
                                     params[indx] = $target;
                                 }
-                            });                            
-                            if (settings.object != "jQuery") {                                
+                            });
+                            if (settings.object != "jQuery") {
                                 var object = window;
                                 $.each(settings.object.split("."), function (indx, oname) {
                                     object = object[oname];
