@@ -29,7 +29,7 @@
         },
         behaviors: {
             show: function ($widget, $element, behavior, options) {
-                var settings = $.extend(true, jsless.settings.behavior, options.behavior, {
+                var settings = $.extend(true, {}, jsless.settings.behavior, options.behavior, {
                     name: 'show',
                     object: "jQuery",
                     method: 'show',
@@ -40,7 +40,7 @@
                 jsless.behaviors.execute($widget, $element, settings, options);
             },
             hide: function ($widget, $element, behavior, options) {
-                var settings = $.extend(true, jsless.settings.behavior, options.behavior, {
+                var settings = $.extend(true, {}, jsless.settings.behavior, options.behavior, {
                     name: 'hide',
                     object: "jQuery",
                     method: 'hide',
@@ -51,7 +51,7 @@
                 jsless.behaviors.execute($widget, $element, settings, options);
             },
             plus1: function ($widget, $element, behavior, options) {
-                var settings = $.extend(true, jsless.settings.behavior, options.behavior, {
+                var settings = $.extend(true, {}, jsless.settings.behavior, options.behavior, {
                     name: 'plus1',
                 }, behavior);
 
@@ -73,7 +73,7 @@
                 });
             },
             htmlnext: function ($widget, $element, behavior, options) {
-                var settings = $.extend(true, jsless.settings.method, options.method, {
+                var settings = $.extend(true, {}, jsless.settings.method, options.method, {
                     name: 'htmlnext',
                     next: '[data-history="next"]',
                     prev: '[data-history="prev"]',

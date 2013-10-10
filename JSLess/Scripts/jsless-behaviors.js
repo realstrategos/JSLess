@@ -28,7 +28,7 @@
         },
         behaviors: {
             execute: function ($widget, $element, behavior, options) {
-                var settings = $.extend(true, jsless.settings.behavior, options.behavior, {
+                var settings = $.extend(true, {}, jsless.settings.behavior, options.behavior, {
                     name: 'execute',
                     object: "jQuery",
                     method: null
