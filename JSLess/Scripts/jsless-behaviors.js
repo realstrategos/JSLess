@@ -36,7 +36,7 @@
                 if (!settings.method) {
                     logger.error("execute method not specified: " + JSON.stringify(settings));
                 }
-                var params = $.extend({}, settings.params);
+                var params = settings.params.slice(0);
                 var compiledParams = jsless.compileParams(settings.dynamic, $widget, $element);
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
