@@ -782,7 +782,8 @@
                 target: 'self',
                 delay: -1,
                 params: [],
-                dynamic: []
+                dynamic: [],
+                stopEventPropagation: false
             }
         },
         behaviors: {
@@ -795,11 +796,14 @@
                 if (!settings.method) {
                     console.error("execute method not specified: " + JSON.stringify(settings));
                 }
-                var params = settings.params;
+                var params = $.extend({}, settings.params);
                 var compiledParams = jsless.compileParams(settings.dynamic, $widget, $element);
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
                 var onEvent = function (event) {
+                    if (settings.stopEventPropagation) {
+                        event.stopPropagation();
+                    }
                     console.debug(settings.name + " event:" + settings.event + " method: " + settings.method + "\r\n\t :: " + JSON.stringify(settings));
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
@@ -818,8 +822,16 @@
                             $element.triggerHandler("jsless-" + settings.name + "-beforecomplete");
                             var object = $target;
                             var method = $target[settings.method];
+
+                            $.each(params, function (indx, val) {
+                                if (params[indx] == "@event") {
+                                    params[indx] = event;
+                                }
+                                if (params[indx] == "@target") {
+                                    params[indx] = $target;
+                                }
+                            });
                             if (settings.object != "jQuery") {
-                                params.unshift($target); //target is the first parameter
                                 var object = window;
                                 $.each(settings.object.split("."), function (indx, oname) {
                                     object = object[oname];
@@ -827,7 +839,6 @@
                                 var method = object[settings.method];
                             }
                             var result = method.apply(object, params);
-
                             $element.triggerHandler("jsless-" + settings.name + "-complete");
                         }
                         if (settings.delay < 0) {
