@@ -251,7 +251,7 @@
         },
         _methods: {
             html: function ($widget, $element, behavior, options) {
-                var settings = $.extend(true, jsless.settings.method, options.method, {
+                var settings = $.extend(true, {}, jsless.settings.method, options.method, {
                     name: 'html',
                     url: null,
                     method: 'GET',
@@ -346,7 +346,7 @@
                 }
             },
             htmlform: function ($widget, $element, behavior, options) {
-                var settings = $.extend(true, jsless.settings.method, options.method, {
+                var settings = $.extend(true, {}, jsless.settings.method, options.method, {
                     name: 'html',
                     url: null,
                     method: 'GET',
