@@ -22,6 +22,12 @@ namespace JSLess.Controllers
         {
             return View();
         }
+
+        public ActionResult Docs()
+        {
+            return View();
+        }
+
         public ActionResult foo()
         {
             return View("Index");
