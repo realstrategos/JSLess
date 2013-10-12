@@ -1,0 +1,288 @@
+﻿@using JSLess
+@{
+    ViewBag.Title = "Docs";
+    Layout = "~/Views/Layouts/_Page.cshtml";
+}
+
+
+<div class="container">
+    <h3>Execute</h3>
+    <p>Execute does this...</p>
+
+
+
+    <div class="doc-block">
+        <div class="row">
+            <div class="col-md-4">
+                <h4>How you'd <em>hide</em> in jQuery...</h4>
+                <div class="code-block" data-provide="markdown">
+                    <span class="begin">&lt;script <span class="red">type</span><span class="blue">="text/javascript"</span>&gt;</span><br />
+
+                    <div class="inner-code-block">
+                        $(<span class="burg">'.foo'</span>).hide();
+                    </div>
+
+                    <span class="begin">&lt;/script&gt;</span>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <h4>Example</h4>
+                <button data-jsless="@(new object[] { new { name = "execute", method = "hide", target = ".foo" } }.ToJsonObject())">click to hide .foo</button>
+                <div class="foo">Some HTML/CSS that will be hidden goes in here.</div>
+            </div>
+        </div>
+
+        <div class="row jsless-row">
+            <div class="col-md-12">
+                <h4>JSLess</h4>
+                <div class="code-block" data-provide="markdown">
+
+                    <div class="inner-code-block">
+                        <span class="begin">&lt;button</span>
+                        <span class="red">data-jsless="</span><span class="bg"><span class="yellow">&#64;</span>(<span class="blue">new object</span>[] { 
+                <span class="blue">new</span> { name = <span class="burg">"execute"</span>,
+                     method = <span class="burg">"hide"</span>, target = <span class="burg">".foo"</span> } }.ToJsonObject()<span class="yellow">)</span></span><span class="begin">"></span>
+                        <br />
+                        click to hide .foo <span class="begin">&lt;/button&gt;</span>
+
+                        <p class="html-content"><span class="begin">&lt;div <span class="red">class</span><span class="blue">="foo"</span>&gt;</span>Some HTML/CSS that will be hidden goes in here.<span class="begin">&lt;/div&gt;</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <div class="doc-block">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>How you'd <em>toggle a class</em> in jQuery...</h4>
+                <div class="code-block" data-provide="markdown">
+                    <span class="begin">&lt;script <span class="red">type</span><span class="blue">="text/javascript"</span>&gt;</span><br />
+
+                    <div class="inner-code-block">
+                        $(<span class="burg">'.slideDown-btn'</span>).click(<b>function</b>() {
+                        <br />
+                        <span class="html-content">$(<b>'.contentBlock'</b>).toggleClass("slow", function() {</span><br />
+                        <span class="html-content">});</span><br />
+                        });
+                    </div>
+
+                    <span class="begin">&lt;/script&gt;</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h4>Example</h4>
+                <button class="slideDown-btn" data-jsless="@(new object[] { new { name = "execute", method = "slideDown", target = ".contentBlock", @params = new object[] { "slow" } } }.ToJsonObject())">click to slideDown DIV</button>
+                <div class="contentBlock" style="display: none;">This content was once hidden, but not anymore...</div>
+            </div>
+        </div>
+
+        <div class="row jsless-row">
+            <div class="col-md-12">
+                <h4>JSLess</h4>
+                <div class="code-block" data-provide="markdown">
+
+                    <div class="inner-code-block">
+                        <span class="begin">&lt;button</span>
+                        <span class="red">data-jsless="</span><span class="bg"><span class="yellow">&#64;</span>(<span class="blue">new object</span>[] { 
+                <span class="blue">new</span> { name = <span class="burg">"execute"</span>,
+                     method = <span class="burg">"slideDown"</span>, target = <span class="burg">".contentBlock"</span>, &#64;params = <span class="blue">new object</span>[] { <span class="burg">"slow"</span> } } }.ToJsonObject()<span class="yellow">)</span></span><span class="begin">"></span>
+                        click to slideDown DIV <span class="begin">&lt;/button&gt;</span>
+
+                        <p class="html-content"><span class="begin">&lt;div <span class="red">class</span><span class="blue">="contentBlock"</span>&gt;</span>This content was once hidden, but not anymore...<span class="begin">&lt;/div&gt;</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div class="doc-block">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>How you'd <em>scroll to top of page</em> in jQuery...</h4>
+                <div class="code-block" data-provide="markdown">
+                    <span class="begin">&lt;script <span class="red">type</span><span class="blue">="text/javascript"</span>&gt;</span><br />
+
+                    <div class="inner-code-block">
+                        $(<span class="burg">'.toTop-btn'</span>).click(<b>function</b>() {
+                        <br />
+                        <span class="html-content">$(<b>'html, body'</b>).animate({ scrollTop: 0 }, "slow");</span><br />
+                        });
+                    </div>
+
+                    <span class="begin">&lt;/script&gt;</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h4>Example</h4>
+                <button class="toTop-btn" data-jsless="@(new object[] { new { name = "execute", method = "animate", target = new { target = "html,body", scope = "document" }, @params = new object[] { new { scrollTop = "0" } } } }.ToJsonObject())">
+                    click to go to top of page</button>
+            </div>
+        </div>
+
+        <div class="row jsless-row">
+            <div class="col-md-12">
+                <h4>JSLess</h4>
+                <div class="code-block" data-provide="markdown">
+
+                    <div class="inner-code-block">
+                        <span class="begin">&lt;button</span>
+                        <span class="red">data-jsless="</span><span class="bg"><span class="yellow">&#64;</span>(<span class="blue">new object</span>[] { 
+                <span class="blue">new</span> { name = <span class="burg">"execute"</span>,
+                     method = <span class="burg">"animate"</span>, target = <span class="blue">new</span>{ target = <span class="burg">"html, body"</span>, scope = <span class="burg">"document"</span> }, &#64;params = <span class="blue">new object</span>[] { <span class="blue">new</span> { scrollTop = <span class="burg">"0"</span> } } } }.ToJsonObject()<span class="yellow">)</span></span><span class="begin">"></span>
+                        click to go to top of page <span class="begin">&lt;/button&gt;</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="doc-block">
+
+        <h3>Using a plugin?</h3>
+        <p>You do this with plugins..blahhhh</p>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h4>How you'd <em>initialize</em> a Bootstrap Tooltip with jQuery...</h4>
+                <div class="code-block" data-provide="markdown">
+                    <span class="begin">&lt;script <span class="red">type</span><span class="blue">="text/javascript"</span>&gt;</span><br />
+
+                    <div class="inner-code-block">
+                        $(<span class="burg">'.myTooltip'</span>).<b>tooltip</b>({<br />
+                        <span class="html-content">container: <span class="burg">"body"</span>,</span><br />
+                        <span class="html-content">delay: <span class="burg">{ show: 500, hide: 100 }</span></span><br />
+                        });
+                    </div>
+                    <span class="begin">&lt;/script&gt;</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h4>Example</h4>
+                <button class="btn btn-default myTooltip" data-title="I was initialized with JSLess!"
+                    data-jsless="@(new object[] { 
+                                 new { name = "execute", method = "tooltip", @event = "load", @params = new object[] { new { hide = 500 } } } }.ToJsonObject())">
+                    hover over me!</button>
+            </div>
+        </div>
+
+        <div class="row jsless-row">
+            <div class="col-md-12">
+                <h4>JSLess</h4>
+                <div class="code-block" data-provide="markdown">
+
+                    <div class="inner-code-block">
+                        <span class="begin">&lt;button</span>
+                        <span class="red">data-jsless="</span><span class="bg"><span class="yellow">&#64;</span>(<span class="blue">new object</span>[] { 
+                <span class="blue">new</span> { name = <span class="burg">"execute"</span>,
+                     method = <span class="burg">"tooltip"</span>, &#64;event = <span class="burg">"load"</span>, &#64;params = <span class="blue">new object</span>[] { <span class="blue">new</span> { scrollTop = <span class="burg">"0"</span> } } } }.ToJsonObject()<span class="yellow">)</span><span class="begin">"></span>
+                        click to go to top of page <span class="begin">&lt;/button&gt;</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*    <div class="doc-block">
+
+        <h3>HTML Method</h3>
+        <p>HTML does this...</p>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h4>How you'd <em>scroll to top of page</em> in jQuery...</h4>
+                <div class="code-block" data-provide="markdown">
+                    <span class="begin">&lt;script <span class="red">type</span><span class="blue">="text/javascript"</span>&gt;</span><br />
+
+                    <div class="inner-code-block">
+                        $(<span class="burg">'.toTop-btn'</span>).click(<b>function</b>() {
+                        <br />
+                        <span class="html-content">$(<b>'html, body'</b>).animate({ scrollTop: 0 }, "slow");</span><br />
+                        });
+                    </div>
+
+                    <span class="begin">&lt;/script&gt;</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h4>Example</h4>
+                <button class="toTop-btn" data-jsless="@(new object[] { new { name = "html", url = "/Home/Partial1", onSuccess = ".html-success" } }.ToJsonObject())">
+                    click to call Partial1</button>
+                <div class="html-success pull-left"></div>
+                <div class="html-fail"></div>
+            </div>
+        </div>
+
+        <div class="row jsless-row">
+            <div class="col-md-12">
+                <h4>JSLess</h4>
+                <div class="code-block" data-provide="markdown">
+
+                    <div class="inner-code-block">
+                        <span class="begin">&lt;button</span>
+                        <span class="red">data-jsless="</span><span class="bg"><span class="yellow">&#64;</span>(<span class="blue">new object</span>[] { 
+                <span class="blue">new</span> { name = <span class="burg">"execute"</span>,
+                     method = <span class="burg">"animate"</span>, target = <span class="blue">new</span>{ target = <span class="burg">"html, body"</span>, scope = <span class="burg">"document"</span> }, &#64;params = <span class="blue">new object</span>[] { <span class="blue">new</span> { scrollTop = <span class="burg">"0"</span> } } } }.ToJsonObject())</span><span class="begin">"></span>
+                        click to go to top of page <span class="begin">&lt;/button&gt;</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+
+
+
+
+
+
+</div>
+<!--/container-->
+
+
+
+
+@*<div class="inner-code-block">
+                    <span class="begin">&lt;div</span>
+                    <span class="red">data-jsless=</span><span class="bg"><span class="yellow">&#64;</span>(<span class="blue">new object</span>[] { 
+                <span class="blue">new</span> { name = <span class="burg">execute</span>,
+                     method = <span class="burg">"hide"</span>, target = <span class="burg">".onboard-option-one"</span> } }.ToJsonObject())</span><span class="begin">"></span>
+
+                    <p class="html-content"><span class="begin">&lt;div&gt;</span>Some HTML/CSS that will be hidden goes in here.<span class="begin">&lt;/div&gt;</span></p>
+
+                    <span class="begin">&lt;/div&gt;</span>
+                </div>*@
+
+
+
+
+
+@*<pre class="prettyprint">
+<xmp class="prettyprint" id="htmlXmp">
+
+
+
+</xmp>
+</pre>
+
+                <pre class="language-javascript"><code class="language-javascript">
+&lt;div data-jsless="(new object[] { new { name = "execute", method = "animate", target = new { target = "html,body", scope = "document" }, params = new object[] { new { scrollTop = "0" } } } }.ToJsonObject())">
+    </code></pre>*@
+
+<script>
+    //$('#example').tooltip();
+</script>

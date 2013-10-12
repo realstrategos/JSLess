@@ -1,12 +1,12 @@
 ﻿@using JSLess
 @{
-    Layout = "~/Views/Layouts/_Partial.cshtml";
+    //Layout = "~/Views/Layouts/_Partial.cshtml";
     var widgetID = Guid.NewGuid();
 }
 <div id="@widgetID" data-jsless-widget="true">
-    <div data-jsless="@(new object[] { new { name = "html", url = "Home/Partial1", onSuccess = ".successZone", onFail = ".div3", @params = new { test = 1 } } }.ToJsonObject())">
+    @*<div data-jsless="@(new object[] { new { name = "html", url = "Home/Partial1", onSuccess = ".successZone", onFail = ".div3", @params = new { test = 1 } } }.ToJsonObject())">
         Partial1
-    </div>
+    </div>*@
     <div class="successZone">
         Partail1-234
     </div>
