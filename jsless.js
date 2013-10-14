@@ -798,12 +798,12 @@
                 }, behavior);
                 if (!settings.method) {
                     logger.error("execute method not specified: " + JSON.stringify(settings));
-                }
-                var params = settings.params.slice(0);
+                }                
                 var compiledParams = jsless.compileParams(settings.dynamic, $widget, $element);
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
                 var onEvent = function (event) {
+                    var params = settings.params.slice(0);
                     if (settings.stopEventPropagation) {
                         event.stopPropagation();
                     }
@@ -863,7 +863,7 @@
                 /*
                 /* Used to bind a keydown event (default is enter key) to fire a click event on the given target(s)
                 */
-                var settings = $.extend(true, jsless.settings.behavior, options.behavior, {
+                var settings = $.extend(true, {}, jsless.settings.behavior, options.behavior, {
                     name: 'keyclick',
                     event: 'keydown',
                     target: 'self',
@@ -890,7 +890,7 @@
                 /*
                 /* Used to add a class to the given eventSource and remove from the target(s) (aka menu selector)
                 */
-                var settings = $.extend(true, jsless.settings.behavior, options.behavior, {
+                var settings = $.extend(true, {}, jsless.settings.behavior, options.behavior, {
                     name: 'toggleClass',
                     className: null
                 }, behavior);
