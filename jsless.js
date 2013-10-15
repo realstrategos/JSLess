@@ -661,7 +661,8 @@
                 }
             },
             htmlevent: function (event, $widget, $element, settings, successSelector, failSelector, compiledParams, options) {
-                logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + JSON.stringify(settings));
+                try { var logMessage = JSON.stringify(settings); } catch (ex) { }
+                logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + logMessage);
                 if (settings.eventstop && settings.event != "load") {
                     event.preventDefault(); //prevent form submit
                 }
