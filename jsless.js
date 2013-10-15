@@ -672,7 +672,7 @@
                 var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination (validation)
                 if (request === undefined || request) {
                     $element.trigger("jsless-ajax-begin");
-                    jsless.invoke({
+                    var ajaxSettings = {
                         url: settings.url,
                         category: "normal", //used to group calls to segment aborting if necessary
                         datatype: "json",
@@ -703,6 +703,9 @@
                             $.each($targets, function (index, elem) {
                                 var $target = $(elem);
                                 var $data = $html.clone();
+                                $data.one("jsless-reload", function () {
+                                    jsless.invoke(ajaxSettings);
+                                });
                                 $target[selector.mode]($data);
                                 $data.jsless(options);
                             });
@@ -718,7 +721,8 @@
                             $targets.triggerHandler("jsless-" + settings.name + "-complete");
                         },
                         retryCount: 0
-                    });
+                    };
+                    jsless.invoke(ajaxSettings);
                 }
             },
             htmlform: function ($widget, $element, behavior, options) {
