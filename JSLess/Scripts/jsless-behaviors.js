@@ -93,7 +93,7 @@
                     $widget.one("jsless-widget-complete", onEvent);
                 }
                 else {
-                    $element.bind(settings.event, onEvent);
+                    $eventSource.bind(settings.event, onEvent);
                 }
             },
             keyclick: function ($widget, $element, behavior, options) {
