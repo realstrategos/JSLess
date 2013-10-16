@@ -29,13 +29,15 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="/Docs">Home</a></li>                    
+                    <li class="active"><a href="/Docs">Home</a></li>
                 </ul>
             </div>
             <!--/.nav-collapse -->
         </div>
     </div>
-    @RenderBody()
+    <div data-jsless-widget="@ViewBag.WidgetID">
+        @RenderBody()
+    </div>
     <script src="/Scripts/bootstrap.min.js"></script>
     @RenderSection("Foot", false)
     <script type="text/javascript">

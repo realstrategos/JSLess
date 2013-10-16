@@ -13,8 +13,10 @@
 
     <div class="doc-block">
         <div class="row">
+            <h3>Execute | .hide()</h3>
             <div class="col-md-4">
-                <h4>How you'd <em>hide</em> in jQuery...</h4>
+
+                <h4>jQuery</h4>
                 <div class="code-block" data-provide="markdown">
                     <span class="begin">&lt;script <span class="red">type</span><span class="blue">="text/javascript"</span>&gt;</span><br />
 
@@ -27,7 +29,7 @@
             </div>
             <div class="col-md-8">
                 <h4>Example</h4>
-                <button data-jsless="@(new object[] { new { name = "execute", method = "hide", target = ".foo" } }.ToJsonObject())">click to hide .foo</button>
+                <button class="btn btn-primary" data-jsless="@(new object[] { new { name = "execute", method = "hide", target = ".foo" } }.ToJsonObject())">click to hide .foo</button>
                 <div class="foo">Some HTML/CSS that will be hidden goes in here.</div>
             </div>
         </div>
@@ -61,8 +63,9 @@
 
     <div class="doc-block">
         <div class="row">
+            <h3>Execute | .toggleClass()</h3>
             <div class="col-md-6">
-                <h4>How you'd <em>toggle a class</em> in jQuery...</h4>
+                <h4>jQuery</h4>
                 <div class="code-block" data-provide="markdown">
                     <span class="begin">&lt;script <span class="red">type</span><span class="blue">="text/javascript"</span>&gt;</span><br />
 
@@ -79,7 +82,7 @@
             </div>
             <div class="col-md-6">
                 <h4>Example</h4>
-                <button class="slideDown-btn" data-jsless="@(new object[] { new { name = "execute", method = "slideDown", target = ".contentBlock", @params = new object[] { "slow" } } }.ToJsonObject())">click to slideDown DIV</button>
+                <button class="slideDown-btn btn btn-primary" data-jsless="@(new object[] { new { name = "execute", method = "slideDown", target = ".contentBlock", @params = new object[] { "slow" } } }.ToJsonObject())">click to slideDown DIV</button>
                 <div class="contentBlock" style="display: none;">This content was once hidden, but not anymore...</div>
             </div>
         </div>
@@ -109,8 +112,9 @@
 
     <div class="doc-block">
         <div class="row">
+            <h3>Execute | .animate()</h3>
             <div class="col-md-6">
-                <h4>How you'd <em>scroll to top of page</em> in jQuery...</h4>
+                <h4>jQuery</h4>
                 <div class="code-block" data-provide="markdown">
                     <span class="begin">&lt;script <span class="red">type</span><span class="blue">="text/javascript"</span>&gt;</span><br />
 
@@ -126,7 +130,7 @@
             </div>
             <div class="col-md-6">
                 <h4>Example</h4>
-                <button class="toTop-btn" data-jsless="@(new object[] { new { name = "execute", method = "animate", target = new { target = "html,body", scope = "document" }, @params = new object[] { new { scrollTop = "0" } } } }.ToJsonObject())">
+                <button class="toTop-btn btn btn-primary" data-jsless="@(new object[] { new { name = "execute", method = "animate", target = new { target = "html,body", scope = "document" }, @params = new object[] { new { scrollTop = "0" } } } }.ToJsonObject())">
                     click to go to top of page</button>
             </div>
         </div>
@@ -150,13 +154,17 @@
 
 
     <div class="doc-block">
-
-        <h3>Using a plugin?</h3>
-        <p>You do this with plugins..blahhhh</p>
+        <div class="panel panel-default">
+            <div class="panel-heading"><h4>Using a 3rd-party plugin?</h4></div>
+            <div class="panel-body" style="color: #000">
+                You can use JSLess with most any 3rd-party JavaScript plugin
+            </div>
+        </div>
 
         <div class="row">
+            <h3>Execute | Plugin</h3>
             <div class="col-md-6">
-                <h4>How you'd <em>initialize</em> a Bootstrap Tooltip with jQuery...</h4>
+                <h4>How you'd <em>initialize</em> a Bootstrap Tooltip with jQuery</h4>
                 <div class="code-block" data-provide="markdown">
                     <span class="begin">&lt;script <span class="red">type</span><span class="blue">="text/javascript"</span>&gt;</span><br />
 
@@ -171,9 +179,9 @@
             </div>
             <div class="col-md-6">
                 <h4>Example</h4>
-                <button class="btn btn-default myTooltip" data-title="I was initialized with JSLess!"
+                <button class="btn btn-primary myTooltip" data-title="I was initialized with JSLess!"
                     data-jsless="@(new object[] { 
-                                 new { name = "execute", method = "tooltip", @event = "load", @params = new object[] { new { hide = 500 } } } }.ToJsonObject())">
+                                 new { name = "execute", method = "tooltip", @event = "load", @params = new object[] { new { delay = new { show = 500, hide = 100 } } } } }.ToJsonObject())">
                     hover over me!</button>
             </div>
         </div>
@@ -202,6 +210,7 @@
         <p>Form post info goes into here..foooooooo...</p>
 
         <div class="row">
+            <h3>htmlform</h3>
             <div class="col-md-6">
                 <h4>How you'd <em>scroll to top of page</em> in jQuery...</h4>
                 <div class="code-block" data-provide="markdown">
@@ -220,11 +229,12 @@
             <div class="col-md-6">
                 <h4>Example</h4>
                 <form>
-                    <button class="toTop-btn btn btn-default" 
-                        data-jsless="@(new object[] { new { name = "htmlform", url = "/Home/FormPostExample", onSuccess = ".html-success", @params = new { test1 = "foo" } },
-                                                      new { name = "execute", method = "htmlNextReloadParent", target = "widget", eventSource = "form", @event = "jsless-htmlform-beforesuccess" } }.ToJsonObject())">
+                    <button type="submit" class="toTop-btn btn btn-primary" 
+                        data-jsless="@(new object[] { new { name = "htmlform", url = "/Home/FormPostExample", method = "POST", onSuccess = "form", @params = new { test1 = "foo" } },
+                                                       }.ToJsonObject())">
+                        @*new { name = "execute", method = "htmlNextReloadParent", target = "widget", eventSource = "form", @event = "jsless-htmlform-beforesuccess" }*@
                         click to post form</button>
-                    <div class="html-success pull-left"></div>
+                    <div class="html-success"></div>
                     <div class="html-fail"></div>
                 </form>
             </div>

@@ -4,8 +4,8 @@
 }
 
 html, body {
-    background-color: #A2A2A2;
-    color: #000;
+    background-color: #383D44;
+    color: #fff;
 }
 
 body {
@@ -25,6 +25,8 @@ body {
 .code-block {
     background-color: #fff;
     border-radius: 3px;
+    box-shadow: 3px 3px 12px #303030;
+    color: #000;
     font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
     padding: 15px !important;
 }

@@ -160,6 +160,7 @@
     <Content Include="Views\Sample\_userProfile.cshtml" />
     <Content Include="Views\Home\Docs.cshtml" />
     <Content Include="Scripts\jquery-1.9.1.min.map" />
+    <Content Include="Views\Home\_Success.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\SampleController.cs" />
