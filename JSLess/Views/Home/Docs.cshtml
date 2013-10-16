@@ -188,7 +188,7 @@
                         <span class="red">data-jsless="</span><span class="bg"><span class="yellow">&#64;</span>(<span class="blue">new object</span>[] { 
                 <span class="blue">new</span> { name = <span class="burg">"execute"</span>,
                      method = <span class="burg">"tooltip"</span>, &#64;event = <span class="burg">"load"</span>, &#64;params = <span class="blue">new object</span>[] { <span class="blue">new</span> { scrollTop = <span class="burg">"0"</span> } } } }.ToJsonObject()<span class="yellow">)</span><span class="begin">"></span>
-                        click to go to top of page <span class="begin">&lt;/button&gt;</span>
+                            click to go to top of page <span class="begin">&lt;/button&gt;</span>
                     </div>
                 </div>
             </div>
@@ -196,10 +196,10 @@
     </div>
 
 
-    @*    <div class="doc-block">
+    <div class="doc-block">
 
-        <h3>HTML Method</h3>
-        <p>HTML does this...</p>
+        <h3>Form Post</h3>
+        <p>Form post info goes into here..foooooooo...</p>
 
         <div class="row">
             <div class="col-md-6">
@@ -219,10 +219,14 @@
             </div>
             <div class="col-md-6">
                 <h4>Example</h4>
-                <button class="toTop-btn" data-jsless="@(new object[] { new { name = "html", url = "/Home/Partial1", onSuccess = ".html-success" } }.ToJsonObject())">
-                    click to call Partial1</button>
-                <div class="html-success pull-left"></div>
-                <div class="html-fail"></div>
+                <form>
+                    <button class="toTop-btn btn btn-default" 
+                        data-jsless="@(new object[] { new { name = "htmlform", url = "/Home/FormPostExample", onSuccess = ".html-success", @params = new { test1 = "foo" } },
+                                                      new { name = "execute", method = "htmlNextReloadParent", target = "widget", eventSource = "form", @event = "jsless-htmlform-beforesuccess" } }.ToJsonObject())">
+                        click to post form</button>
+                    <div class="html-success pull-left"></div>
+                    <div class="html-fail"></div>
+                </form>
             </div>
         </div>
 
@@ -241,7 +245,7 @@
                 </div>
             </div>
         </div>
-    </div>*@
+    </div>
 
 
 
@@ -283,6 +287,4 @@
 &lt;div data-jsless="(new object[] { new { name = "execute", method = "animate", target = new { target = "html,body", scope = "document" }, params = new object[] { new { scrollTop = "0" } } } }.ToJsonObject())">
     </code></pre>*@
 
-<script>
-    //$('#example').tooltip();
-</script>
+
