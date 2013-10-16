@@ -32,5 +32,10 @@ namespace JSLess.Controllers
         {
             return View("Index");
         }
+
+        public ActionResult FormPostExample()
+        {
+            return View("Index");
+        }
     }
 }
