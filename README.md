@@ -4,6 +4,27 @@ What is JSLess?
 ---------------
 JSLess is a framework that allows you, in a clean and extensible way, to use complex JavaScript/jQuery behaviors without ever having to write or understand JavaScript code.
 
+Getting Started
+---------------
+* [Download the latest release]().
+* Clone the repo: `git clone https://github.com/realstrategoes/JSLess.git`.
+* Install with [Bower](http://bower.io): `bower install jsless`.
+* Download the [NuGet Package](http://www.nuget.org/packages/JSLess/)
+
+Add this at the bottom of your page, before the ending `body` tag.
+```html
+<script type="text/javascript">//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js</script>
+<script type="text/javascript">js/jsless.min.js</script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("body").jsless({});
+  });
+</script>
+```
+Also, give your containing DIV a <b>widget ID</b>. For example, `<div data-jsless-widget="myWidget">`. This is targeted when submitting forms as well as other actions by JSLess.
+
+Features
+----------------------
 ####Behaviors/Methods
 Behaviors are complex (or simple) actions that change the HTML DOM in some manner.
 
@@ -23,10 +44,6 @@ has a [Tooltip plugin](http://getbootstrap.com/javascript/#tooltips) that can be
   <li>object = jQuery</li>
 </ul>
 
-
-Getting Started
----------------
-(install instructions...setting up your page and code layout)
 
 Examples
 ----------------------
