@@ -6,7 +6,7 @@ JSLess is a framework that allows you, in a clean and extensible way, to use com
 
 Getting Started
 ---------------
-* [Download the latest release]().
+* [Download the latest release](https://github.com/realstrategos/JSLess/archive/master.zip).
 * Clone the repo: `git clone https://github.com/realstrategoes/JSLess.git`.
 * Install with [Bower](http://bower.io): `bower install jsless`.
 * Download the [NuGet Package](http://www.nuget.org/packages/JSLess/)
