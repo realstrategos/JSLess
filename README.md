@@ -21,7 +21,7 @@ Add this at the bottom of your page, before the ending `body` tag.
   });
 </script>
 ```
-Also, give your containing DIV a <b>widget ID</b>. For example, `<div data-jsless-widget="myWidget">`. This is targeted when submitting forms as well as other actions by JSLess.
+Also, give your containing DIV a <b>widget ID</b>, preferably a unique ID such as `Guid.NewGuid()`. For example, `<div data-jsless-widget="myWidget">`. This is defines the scope when submitting forms as well as other actions by JSLess.
 
 Features
 ----------------------
@@ -44,15 +44,37 @@ has a [Tooltip plugin](http://getbootstrap.com/javascript/#tooltips) that can be
   <li>object = jQuery</li>
 </ul>
 
+####JSLess Custom Functions
+A third file is included when downloading the JSLess library, <b>jsless.example.js</b>. This contains a few "stock" custom behaviors and allows you to add more to it. 
+When placing this file in your directory, change the name of the file to a custom name (jsless.yourSite.js) so you can customize it.
+
+JSLess custom can be used for many reasons...
+* To create custom behaviors that cannot be achieved with Execute
+* For use with behaviors that are used many times in your application
+* Or use it however you want!
+ 
+A few basic example are included by default in the jsless.example file. 
+* .show() 
+* .hide() 
+* plus1 (a function which adds 1 to a target) 
+* htmlnext (useful for single page apps - further explaination to come)
+
+(We hope to have a place for people to post their custom behaviors <em>soon</em>.)
+
 
 Examples
 ----------------------
+
+###Execute
+
 <b>Execute | .toggle()</b>
 ```
 <button type="button" 
   data-jsless="@(new object[] { new { name = "execute", method = "toggle", target = ".create-discussion" } }.ToJsonObject())">
 toggle btn </button>
 ```
+
+Optionally, if you want to animate your method/function and you're using jQuery UI, you can add `@params = new object[] { "linear" }` after `target`, which specifiies the easing animation to apply. In this case <em>linear</em> is the effect.
 
 <b>Execute | .animate()</b>
 ```
@@ -68,3 +90,23 @@ toggle btn </button>
 </div>
 ```
 (<em><b>Notice:</b></em> the `@event = "load"`, which will execute the method when the page loads. Similar to `document.ready()` in jQuery)
+
+###Custom Behaviors
+
+<b>Custom Functions (jsless.example.js) | show, hide, etc. </b>
+<b>.show()</b>
+```
+<button type="button"
+   data-jsless="@(new object[] { new { name = "show", target = ".hiddenDiv" } }.ToJsonObject())">
+   show the div!
+</button>
+```
+<b>.show() & .hide()</b>
+```
+<button type="button"
+   data-jsless="@(new object[] { new { name = "show", target = ".hiddenDiv" },
+   data-jsless="@(new object[] { new { name = "hide", target = ".visibleDiv" } }.ToJsonObject())">
+   show this hide that!
+</button>
+```
+
