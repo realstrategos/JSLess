@@ -4,6 +4,11 @@ What is JSLess?
 ---------------
 JSLess is a framework that allows you, in a clean and extensible way, to use complex JavaScript/jQuery behaviors without ever having to write or understand JavaScript code.
 
+The primary objective of JSLess is to make developing the user interface easy in a team environment with a programmer and designer. 
+For example, a designer with limited/no JavaScript knowledge can easily implement these behaviors within HTML pages and the JavaScript developer can create custom behaviors for that designer to use. 
+
+Let the designers focus on designing and let the programmers focus on programming! 
+
 Getting Started
 ---------------
 * [Download the latest release](https://github.com/realstrategos/JSLess/archive/master.zip).
