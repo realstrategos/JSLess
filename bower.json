@@ -1,0 +1,8 @@
+{
+    "name": "JSLess",
+    "version": "1.5.8",
+    "main": "./jsless.js",
+    "dependencies": {
+        "jquery": "latest"
+    }
+}
