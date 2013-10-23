@@ -37,7 +37,14 @@
                     logger.error("execute method not specified: " + JSON.stringify(settings));
                 }
 
-
+                var dynamicParams = {};
+                $.each(settings.dynamic, function (indx, indxVal) {
+                    if (settings.dynamic[indx] == null) {
+                        return;
+                    }
+                    var compiled = jsless.compileParams({ dynamic: settings.dynamic[indx] }, $widget, $element);
+                    dynamicParams[indx] = compiled;
+                });
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
                 var onEvent = function (event) {
@@ -49,14 +56,7 @@
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
                         var $target = targetSelector.getVal();
-                        var dynamicParams = {};
-                        $.each(settings.dynamic, function (indx, indxVal) {
-                            if (settings.dynamic[indx] == null) {
-                                return;
-                            }
-                            var compiled = jsless.compileParams({ dynamic: settings.dynamic[indx] }, $widget, $element);
-                            dynamicParams[indx] = compiled;
-                        });
+                        
                         $.each(dynamicParams, function (indx, indxVal) {
                             var val = jsless.getParams(dynamicParams[indx]);
                             if (typeof val === "object") {
