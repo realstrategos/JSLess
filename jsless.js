@@ -464,6 +464,7 @@
                 var dynamicParams = {};
                 $.each(params.dynamic, function (indx, val) {
                     var settings = {
+                        name: null,
                         target: val,
                         object: "jQuery",
                         method: "val",
@@ -473,7 +474,8 @@
                         $.extend(settings, val);
                     }
                     settings = jsless.getSelector(settings, $widget, $element);
-                    dynamicParams[indx] = function () {
+                    var name = settings.name || indx;
+                    dynamicParams[name] = function () {
                         var $target = settings.getVal();
                         var object = $target;
                         if (settings.object != "jQuery") {
@@ -502,15 +504,14 @@
             if (params.dynamic) {
                 $.each(params.dynamic, function (indx, val) {
                     var obj = dynamicParams;
-                    var name = indx;
+                    var name = null;
                     $.each(indx.split("."), function (objIndx, objName) {
-                        if (objIndx == 0) {
-                            return true;
+                        if (name != null) {
+                            obj = obj[name];
                         }
-                        if (obj[name] === undefined) {
-                            obj[name] = {};
+                        if (obj[objName] === undefined) {
+                            obj[objName] = {};
                         }
-                        obj = obj[name];
                         name = objName;
                     });
                     obj[name] = val();
@@ -535,7 +536,7 @@
                 temp[name] = val;
             });
 
-            var result = $.extend(true, {}, forms, dynamicParams, temp);
+            var result = $.extend(true, {}, forms, temp, dynamicParams);
             return result;
         },
         getValue: function ($element, result, name) {
@@ -632,7 +633,7 @@
                     url: null,
                     method: 'GET',
                     event: 'click',
-                    eventstop: false,
+                    stopEventPropagation: false,
                     onSuccess: 'widget',
                     onFail: null,
                     params: {
@@ -663,7 +664,7 @@
             htmlevent: function (event, $widget, $element, settings, successSelector, failSelector, compiledParams, options) {
                 try { var logMessage = JSON.stringify(settings); } catch (ex) { }
                 logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + logMessage);
-                if (settings.eventstop && settings.event != "load") {
+                if (settings.stopEventPropagation && settings.event != "load") {
                     event.preventDefault(); //prevent form submit
                 }
                 var params = jsless.getParams(compiledParams);
@@ -704,7 +705,8 @@
                             $.each($targets, function (index, elem) {
                                 var $target = $(elem);
                                 var $data = $html.clone();
-                                $data.one("jsless-reload", function () {
+                                $data.one("jsless-reload", function (event, reloadParams) {
+                                    $.extend(true, ajaxSettings.params, reloadParams);
                                     jsless.invoke(ajaxSettings);
                                 });
                                 $target[selector.mode]($data);
@@ -732,7 +734,7 @@
                     url: null,
                     method: 'GET',
                     event: $element.is("form") ? 'submit' : 'click',
-                    eventstop: $element.is("form"),
+                    stopEventPropagation: $element.is("form"),
                     onSuccess: 'widget',
                     onFail: null,
                     params: {
@@ -803,8 +805,16 @@
                 }, behavior);
                 if (!settings.method) {
                     logger.error("execute method not specified: " + JSON.stringify(settings));
-                }                
-                var compiledParams = jsless.compileParams(settings.dynamic, $widget, $element);
+                }
+
+                var dynamicParams = {};
+                $.each(settings.dynamic, function (indx, indxVal) {
+                    if (settings.dynamic[indx] == null) {
+                        return;
+                    }
+                    var compiled = jsless.compileParams({ dynamic: settings.dynamic[indx] }, $widget, $element);
+                    dynamicParams[indx] = compiled;
+                });
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
                 var onEvent = function (event) {
@@ -816,13 +826,15 @@
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
                         var $target = targetSelector.getVal();
-                        var dynamicParams = jsless.getParams(compiledParams);
+                        
                         $.each(dynamicParams, function (indx, indxVal) {
-                            if (typeof dynamicParams[indx] === "object") {
-                                $.extend(true, params[indx], dynamicParams[indx]);
+                            var val = jsless.getParams(dynamicParams[indx]);
+                            if (typeof val === "object") {
+                                params[indx] = params[indx] || {};
+                                $.extend(true, params[indx], val);
                             }
                             else {
-                                params[indx] = dynamicParams[indx];
+                                params[indx] = val;
                             }
                         });
 
