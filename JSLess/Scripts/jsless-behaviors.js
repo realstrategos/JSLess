@@ -35,8 +35,9 @@
                 }, behavior);
                 if (!settings.method) {
                     logger.error("execute method not specified: " + JSON.stringify(settings));
-                }                
-                var compiledParams = jsless.compileParams(settings.dynamic, $widget, $element);
+                }
+
+
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
                 var onEvent = function (event) {
@@ -48,13 +49,22 @@
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
                         var $target = targetSelector.getVal();
-                        var dynamicParams = jsless.getParams(compiledParams);
+                        var dynamicParams = {};
+                        $.each(settings.dynamic, function (indx, indxVal) {
+                            if (settings.dynamic[indx] == null) {
+                                return;
+                            }
+                            var compiled = jsless.compileParams({ dynamic: settings.dynamic[indx] }, $widget, $element);
+                            dynamicParams[indx] = compiled;
+                        });
                         $.each(dynamicParams, function (indx, indxVal) {
-                            if (typeof dynamicParams[indx] === "object") {
-                                $.extend(true, params[indx], dynamicParams[indx]);
+                            var val = jsless.getParams(dynamicParams[indx]);
+                            if (typeof val === "object") {
+                                params[indx] = params[indx] || {};
+                                $.extend(true, params[indx], val);
                             }
                             else {
-                                params[indx] = dynamicParams[indx];
+                                params[indx] = val;
                             }
                         });
 

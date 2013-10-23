@@ -88,6 +88,7 @@
                 var dynamicParams = {};
                 $.each(params.dynamic, function (indx, val) {
                     var settings = {
+                        name: null,
                         target: val,
                         object: "jQuery",
                         method: "val",
@@ -97,7 +98,8 @@
                         $.extend(settings, val);
                     }
                     settings = jsless.getSelector(settings, $widget, $element);
-                    dynamicParams[indx] = function () {
+                    var name = settings.name || indx;
+                    dynamicParams[name] = function () {
                         var $target = settings.getVal();
                         var object = $target;
                         if (settings.object != "jQuery") {
@@ -126,15 +128,14 @@
             if (params.dynamic) {
                 $.each(params.dynamic, function (indx, val) {
                     var obj = dynamicParams;
-                    var name = indx;
+                    var name = null;
                     $.each(indx.split("."), function (objIndx, objName) {
-                        if (objIndx == 0) {
-                            return true;
+                        if (name != null) {
+                            obj = obj[name];
                         }
-                        if (obj[name] === undefined) {
-                            obj[name] = {};
+                        if (obj[objName] === undefined) {
+                            obj[objName] = {};
                         }
-                        obj = obj[name];
                         name = objName;
                     });
                     obj[name] = val();
@@ -159,7 +160,7 @@
                 temp[name] = val;
             });
 
-            var result = $.extend(true, {}, forms, dynamicParams, temp);
+            var result = $.extend(true, {}, forms, temp, dynamicParams);
             return result;
         },
         getValue: function ($element, result, name) {
@@ -328,12 +329,8 @@
                             $.each($targets, function (index, elem) {
                                 var $target = $(elem);
                                 var $data = $html.clone();
-                                $data.one("jsless-reload", function (reloadParams) {
-                                    var rParams = {};
-                                    if (reloadParams) {
-                                        rParams = jsless.getParams(jsless.compileParams(settings.params, $widget, $element));
-                                    }
-                                    var newParams = $.extend(ajaxSettings.params, rParams);
+                                $data.one("jsless-reload", function (event, reloadParams) {
+                                    $.extend(true, ajaxSettings.params, reloadParams);
                                     jsless.invoke(ajaxSettings);
                                 });
                                 $target[selector.mode]($data);
