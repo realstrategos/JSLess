@@ -256,7 +256,7 @@
                     url: null,
                     method: 'GET',
                     event: 'click',
-                    eventstop: false,
+                    stopEventPropagation: false,
                     onSuccess: 'widget',
                     onFail: null,
                     params: {
@@ -287,7 +287,7 @@
             htmlevent: function (event, $widget, $element, settings, successSelector, failSelector, compiledParams, options) {
                 try { var logMessage = JSON.stringify(settings); } catch (ex) { }
                 logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + logMessage);
-                if (settings.eventstop && settings.event != "load") {
+                if (settings.stopEventPropagation && settings.event != "load") {
                     event.preventDefault(); //prevent form submit
                 }
                 var params = jsless.getParams(compiledParams);
@@ -328,7 +328,12 @@
                             $.each($targets, function (index, elem) {
                                 var $target = $(elem);
                                 var $data = $html.clone();
-                                $data.one("jsless-reload", function () {
+                                $data.one("jsless-reload", function (reloadParams) {
+                                    var rParams = {};
+                                    if (reloadParams) {
+                                        rParams = jsless.getParams(jsless.compileParams(settings.params, $widget, $element));
+                                    }
+                                    var newParams = $.extend(ajaxSettings.params, rParams);
                                     jsless.invoke(ajaxSettings);
                                 });
                                 $target[selector.mode]($data);
@@ -356,7 +361,7 @@
                     url: null,
                     method: 'GET',
                     event: $element.is("form") ? 'submit' : 'click',
-                    eventstop: $element.is("form"),
+                    stopEventPropagation: $element.is("form"),
                     onSuccess: 'widget',
                     onFail: null,
                     params: {
