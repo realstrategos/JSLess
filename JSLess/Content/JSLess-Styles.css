@@ -1,0 +1,81 @@
+﻿
+    html, body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h4-5, .h5, .h6 {
+    font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+}
+
+html, body {
+    background-color: #383D44;
+    color: #fff;
+}
+
+body {
+    padding-top: 70px;
+}
+
+.jsless-row {
+    margin-top: 3%;
+}
+
+.doc-block {
+    margin-top: 3%;
+    border-top: 1px solid #F3F3F3;
+    padding-top: 1.5%;
+}
+
+.code-block {
+    background-color: #fff;
+    border-radius: 3px;
+    box-shadow: 3px 3px 12px #303030;
+    color: #000;
+    font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+    padding: 15px !important;
+}
+
+pre.prettyprint {
+    padding: 15px !important;
+}
+
+.inner-code-block {
+    padding-left: 20px;
+}
+
+.html-content {
+    margin-top: 10px;
+    padding-left: 25px;
+}
+
+.bg {
+    background-color: rgba(208, 227, 255, 0.39);
+}
+
+.begin {
+    color: #4692CC;
+}
+
+.blue {
+    color: #0047FF;
+}
+
+.red {
+    color: #FF4C4C;
+}
+
+.teal {
+    color: #128AA8;
+}
+
+.burg {
+    color: #B40000;
+}
+
+.yellow {
+    background-color: #FFFF38;
+    color: #000;
+}
+
+/*Example CSS*/
+.contentBlock {
+    background-color: #4692CC;
+    height: 40px;
+    padding: 8px;
+}
