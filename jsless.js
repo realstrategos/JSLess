@@ -705,11 +705,7 @@
                             $targets.triggerHandler("jsless-" + settings.name + "-beforecomplete");
                             $.each($targets, function (index, elem) {
                                 var $target = $(elem);
-                                var $data = $html.clone();
-                                $data.one("jsless-reload", function (event, reloadParams) {
-                                    $.extend(true, ajaxSettings.params, reloadParams);
-                                    jsless.invoke(ajaxSettings);
-                                });
+                                var $data = $html.clone();                                
                                 $target[selector.mode]($data);
                                 $data.jsless(options);
                             });
