@@ -182,19 +182,61 @@
             this.success = false;
         }
         var data = XMLHttpRequest.responseText;
-        //var ct = request.XMLHttpRequest.getAllResponseHeaders("content-type") || "";
-        //this.isHTML = ct.indexOf('html') > -1;
-        this.isHTML = typeof data != "object";
-
+        this.isHTML = true;
+        if (XMLHttpRequest.responseJSON) {
+            this.isHTML = false;
+            data = XMLHttpRequest.responseJSON;
+        }
         if (!this.isHTML) {
             data = fixDate(data);
-            if (data.d) { //MS asmx wraps in a field of d, TODO: make sure this is the ONLY field before we do this
+            if (data.d && Object.keys(data).length == 1) { //MS asmx wraps in a field of d, TODO: make sure this is the ONLY field before we do this
                 data = data.d;
             }
         }
         this.data = data;
     }
 
+    // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
+    if (!Object.keys) {
+        Object.keys = (function () {
+            'use strict';
+            var hasOwnProperty = Object.prototype.hasOwnProperty,
+                hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString'),
+                dontEnums = [
+                  'toString',
+                  'toLocaleString',
+                  'valueOf',
+                  'hasOwnProperty',
+                  'isPrototypeOf',
+                  'propertyIsEnumerable',
+                  'constructor'
+                ],
+                dontEnumsLength = dontEnums.length;
+
+            return function (obj) {
+                if (typeof obj !== 'object' && (typeof obj !== 'function' || obj === null)) {
+                    throw new TypeError('Object.keys called on non-object');
+                }
+
+                var result = [], prop, i;
+
+                for (prop in obj) {
+                    if (hasOwnProperty.call(obj, prop)) {
+                        result.push(prop);
+                    }
+                }
+
+                if (hasDontEnumBug) {
+                    for (i = 0; i < dontEnumsLength; i++) {
+                        if (hasOwnProperty.call(obj, dontEnums[i])) {
+                            result.push(dontEnums[i]);
+                        }
+                    }
+                }
+                return result;
+            };
+        }());
+    }
 
     var fixDate = function (obj) {
         if (obj === null) {
