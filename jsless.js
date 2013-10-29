@@ -77,6 +77,7 @@
                     logger.log("missing data-jsless-widget, treating as a partial");
                 }
             }
+            var widgetID = $widget.attr("data-jsless-widget");
             var $subWidgets = $element.find("[data-jsless-widget]");
             $subWidgets = $subWidgets.filter(function (index) {
                 var temp = $(this).parentsUntil($element, "[data-jsless-widget]").length == 0;
@@ -84,7 +85,7 @@
             });
             var $targets = $element.find("[data-jsless]").addBack("[data-jsless]");
             $targets = $targets.filter(function (index) {
-                var temp = $(this).parentsUntil($element.parent(), "[data-jsless-widget]").length <= 1;
+                var temp = $(this).parentsUntil($element.parent(), "[data-jsless-widget][data-jsless-widget!=" + widgetID + "]").length == 0;
                 return temp;
             });
             logger.log("found: " + $targets.length + " elements and " + $subWidgets.length + " sub widgets ...");
