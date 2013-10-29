@@ -1,5 +1,5 @@
 {
-    "name": "JSLess",
+    "name": "jsless",
     "description": "Custom JavaScript library for client side behaviors.",
     "version": "1.16.01",
     "main": "./jsless.js",
