@@ -19,6 +19,7 @@
                 name: null,
                 onSuccess: "widget",
                 onFail: "widget",
+                eventSource: 'self',
                 params: {
                     dynamic: {},
                     forms: []
@@ -271,6 +272,7 @@
                 if (!settings.onFail) {
                     settings.onFail = settings.onSuccess;
                 }
+                var $source = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var successSelector = jsless.getSelector(settings.onSuccess, $widget, $element);
                 var failSelector = jsless.getSelector(settings.onFail, $widget, $element);
                 var compiledParams = jsless.compileParams(settings.params, $widget, $element);
@@ -282,7 +284,7 @@
                     $widget.one("jsless-widget-complete", onEvent);
                 }
                 else {
-                    $element.bind(settings.event, onEvent);
+                    $source.bind(settings.event, onEvent);
                 }
             },
             htmlevent: function (event, $widget, $element, settings, successSelector, failSelector, compiledParams, options) {
@@ -328,7 +330,7 @@
                             $targets.triggerHandler("jsless-" + settings.name + "-beforecomplete");
                             $.each($targets, function (index, elem) {
                                 var $target = $(elem);
-                                var $data = $html.clone();                                
+                                var $data = $html.clone();
                                 $target[selector.mode]($data);
                                 $data.jsless(options);
                             });
