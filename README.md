@@ -70,6 +70,8 @@ A few basic example are included by default in the jsless.example file.
 Examples
 ----------------------
 
+<b>NOTE:</b> The example below are using ASP.NET, therefore JSLess statements in your markup can be rendered correctly. Otherwise, a JSLess statement would be a raw JSON statement, which needs converted (somehow, still working on this).
+
 ###Execute
 
 <b>Execute | .toggle()</b>
