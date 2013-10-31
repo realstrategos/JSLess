@@ -1,7 +1,7 @@
 {
     "name": "jsless",
     "description": "Custom JavaScript library for client side behaviors.",
-    "version": "1.16.01",
+    "version": "1.16.02",
     "main": "./jsless.js",
     "dependencies": {
         "jquery": "latest"
