@@ -714,7 +714,7 @@
                 var $success = successSelector.getVal();
                 var $fail = failSelector.getVal();
 
-                var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination (validation)
+                var request = $element.triggerHandler("jsless-" + settings.name + "-begin", [compiledParams]); // allow for intercept and termination (validation)
                 if (request === undefined || request) {
                     $element.trigger("jsless-ajax-begin");
                     var ajaxSettings = {

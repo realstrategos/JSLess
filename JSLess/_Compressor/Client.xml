@@ -13,7 +13,7 @@
         CssFiles=""
         CssOutputFile=""
         JavaScriptFiles="@(JSLess)"
-        JavaScriptOutputFile="$(PFolder)\Scripts\jsless.min.js"
+        JavaScriptOutputFile="$(PFolder)\..\jsless.min.js"
         DeleteCssFiles="false"
         CssCompressionType="YuiStockCompression"
         ObfuscateJavaScript="True"
@@ -28,5 +28,7 @@
             />
     <WriteLinesToFile File="$(PFolder)\Scripts\jsless.js" Lines="" Overwrite="true" />
     <WriteLinesToFile File="$(PFolder)\Scripts\jsless.js" Lines="$([System.IO.File]::ReadAllText(%(JSLess.Identity)))%0a%0d" Overwrite="false" />
+    <WriteLinesToFile File="$(PFolder)\..\jsless.js" Lines="" Overwrite="true" />
+    <WriteLinesToFile File="$(PFolder)\..\jsless.js" Lines="$([System.IO.File]::ReadAllText(%(JSLess.Identity)))%0a%0d" Overwrite="false" />
   </Target>
 </Project>
