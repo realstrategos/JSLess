@@ -178,6 +178,10 @@
                     result[name].push($element.val());
                 }
             }
+            else if ($element.is("input[data-list]")) {
+                result[name] = result[name] || [];
+                result[name].push($element.val());
+            }
             else if ($element.is("input:checkbox,input:radio")) {
                 if ($element.is("input[value]")) {
                     if ($element.is(":checked")) {
