@@ -175,7 +175,7 @@
                     if (settings.level > 0) {
                         $parent = $($parent.parents(settings.parentSelector)[settings.level - 1]);
                     }
-                    $root.triggerHandler(settings.parentEvent);
+                    $parent.triggerHandler(settings.parentEvent);
                 }
                 if (settings.event == "load") {
                     $widget.one("jsless-widget-complete", onEvent);
