@@ -16,8 +16,8 @@
     </metadata>
     <files>
         <file src="JSLess\Scripts\jsless.example.js" target="content\Scripts\jsless.example.js" />
-        <file src="JSLess\Scripts\jsless.js" target="content\Scripts\jsless.js" />
-        <file src="JSLess\Scripts\jsless.min.js" target="content\Scripts\jsless.min.js" />
+        <file src="jsless.js" target="content\Scripts\jsless.js" />
+        <file src="jsless.min.js" target="content\Scripts\jsless.min.js" />
         <file src="JSLess\JSLess.cs" target="content\JSLess.cs" />
     </files>
 </package>
