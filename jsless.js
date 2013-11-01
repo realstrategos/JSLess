@@ -597,6 +597,10 @@
                     result[name].push($element.val());
                 }
             }
+            else if ($element.is("input[data-list]")) {
+                result[name] = result[name] || [];
+                result[name].push($element.val());
+            }
             else if ($element.is("input:checkbox,input:radio")) {
                 if ($element.is("input[value]")) {
                     if ($element.is(":checked")) {
@@ -970,6 +974,30 @@
                         $source.addClass(className);
                     }
                 });
+            },
+            parentTrigger: function ($widget, $element, behavior, options) {
+                var settings = $.extend(true, {}, jsless.settings.behavior, options.method, {
+                    name: 'parentTrigger',
+                    eventSource: 'widget',
+                    parentSelector: '[data-jsless-widget]',
+                    parentEvent: 'jsless-reload',
+                    level: 1
+                }, behavior);
+
+                var $sourceSelector = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
+                var onEvent = function (event) {
+                    var $parent = $sourceSelector;
+                    if (settings.level > 0) {
+                        $parent = $($parent.parents(settings.parentSelector)[settings.level - 1]);
+                    }
+                    $root.triggerHandler(settings.parentEvent);
+                }
+                if (settings.event == "load") {
+                    $widget.one("jsless-widget-complete", onEvent);
+                }
+                else {
+                    $sourceSelector.bind(settings.event, onEvent);
+                }
             }
         }
     }
