@@ -584,7 +584,7 @@
             return result;
         },
         getValue: function ($element, result, name) {
-            if ($element.attr("contenteditiable") != null) {
+            if ($element.attr("contenteditable") != null) {
                 result[name] = $element.html();
             }
             else if ($element.is("select[multiple] option:selected")) {
