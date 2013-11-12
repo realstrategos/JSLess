@@ -477,6 +477,9 @@
                 else if (settings.scope == "document") {
                     $scope = $(document);
                 }
+                else if (settings.scope == "parents") {
+                    $scope = $element.parents();
+                }
                 else {
                     $scope = $(settings.scope);
                 }
@@ -484,6 +487,9 @@
                 var $target = $scope;
                 if (settings.target != null) {
                     $target = $scope.find(settings.target);
+                }
+                if (selector == "form") {
+                    $target = $element.parents("form").first();
                 }
                 return $target;
             }
@@ -493,6 +499,9 @@
             else if (selector == "widget") {
                 settings.mode = "replaceWith";
                 $val = $widget;
+            }
+            else if (selector == "form") {
+                $val = $element.parents("form").first();
             }
             else if (settings.latebind) {
                 settings.getVal = locator;
