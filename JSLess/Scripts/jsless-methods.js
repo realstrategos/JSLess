@@ -251,7 +251,9 @@
                 if ($element.attr("data-list") != null) {
                     var name = $element.attr("data-list");
                     result[name] = result[name] || [];
-                    result[name].push(temp);
+                    if (!jQuery.isEmptyObject(temp)) {
+                        result[name].push(temp);
+                    }
                 }
                 else {
                     var name = $element.attr("name");
