@@ -187,6 +187,16 @@
                     result[name].push($element.val());
                 }
             }
+            else if ($element.is("input[data-type='enum']:checkbox")) {                
+                if ($element.is(":checked")) {
+                    var temp = result[name] || "";
+                    if (temp.length > 0) {
+                        temp += ", ";
+                    }
+                    temp += $element.val();
+                    result[name] = temp;
+                }
+            }
             else if ($element.is("input[data-list]")) {
                 result[name] = result[name] || [];
                 result[name].push($element.val());
