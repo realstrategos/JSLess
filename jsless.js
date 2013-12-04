@@ -171,6 +171,29 @@
 
     var logger = jsless.logger;
 
+    var transport = function (options) {
+        //var contentType = 'application/json; charset=utf-8';
+        var settings = $.extend({}, options, {
+            data: $.postify(options.data),
+            traditional: true
+            //, converters: {
+            //    "text json": function (result) {
+            //        var data = $.parseJSON(result, true);
+            //        if (data.d && Object.keys(data).length == 1) { //MS asmx wraps in a field of d, TODO: make sure this is the ONLY field before we do this
+            //            data = data.d;
+            //        }
+            //        return data;
+            //    }
+            //}
+        });
+        if (settings.subdomain) {
+            settings.url = location.protocol + "//" + settings.subdomain + "." + location.host + settings.url;
+            settings.datatype = 'jsonp';
+        }
+        var _request = $.ajax(settings);
+        return _request;
+    }
+
     var ajaxResponse = function (invoker, XMLHttpRequest) {
         this.invoker = invoker;
         this.request = XMLHttpRequest;
@@ -188,7 +211,6 @@
             data = XMLHttpRequest.responseJSON;
         }
         if (!this.isHTML) {
-            data = fixDate(data);
             if (data.d && Object.keys(data).length == 1) { //MS asmx wraps in a field of d, TODO: make sure this is the ONLY field before we do this
                 data = data.d;
             }
@@ -236,42 +258,6 @@
                 return result;
             };
         }());
-    }
-
-    var fixDate = function (obj) {
-        if (obj === null) {
-            return obj;
-        }
-
-        // ASP.NET JSON date?
-        if (typeof obj === "string") {
-            var pattern = /\/Date\(\d+\)\//;
-            var match = obj.match(pattern);
-
-            // nope, regular string
-            if (!match) {
-                return obj;
-            }
-
-            var match = match[0].match(/\d+/);
-            var number = parseInt(match[0]);
-
-            // yup, JSON-serialized DateTime
-            return new Date(number);
-        }
-        // string or number
-        if (typeof obj !== "object") {
-            return obj;
-        }
-
-        // array or object
-        var self = $.proxy(fixDate, this);
-
-        $.each(obj, function (key, val) {
-            obj[key] = self(val);
-        });
-
-        return obj;
     }
 
     var invoke = function (options) {
@@ -325,28 +311,14 @@
             }
             this._running = true;
             this._request = null;
-
-            var urlString = this.settings.url;
-            var type = this.settings.method;
-
-            var data = this.settings.params;
-            var datatype = this.settings.datatype;
-            if (this.settings.subdomain) {
-                urlString = location.protocol + "//" + subDomain + "." + location.host + urlString;
-                datatype = 'jsonp';
-            }
-
-            var formattedData = $.postify(data);
-            var contentType = 'application/json; charset=utf-8';
-
-            this._request = $.ajax({
-                url: urlString,
-                type: type,
+                        
+            this._request = jsless.transport({
+                url: this.settings.url,
+                type: this.settings.method,
                 //contentType: contentType,
-                dataType: datatype,
-                data: formattedData,
-                cache: false,
-                traditional: true,
+                dataType: this.settings.datatype,
+                data: this.settings.params,
+                cache: false,                
                 complete: $.proxy(_onComplete, this)
             });
             return true;
@@ -409,6 +381,7 @@
             var invoker = new invoke(options);
             return invoker;
         }
+        , transport: transport
     }
 
     logger.info("Loading Invoke ...");
