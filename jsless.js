@@ -11,9 +11,26 @@
 !function ($) {
     "use strict"; // jshint ;_;
 
-    var console = window.console || { log: function () { }, error: function (e) { alert(e); }, info: function () { }, warn: function () { }, debug: function () { } };
-    var consoleMethods = ["log", "error", "warn", "debug", "info"];
+    if (!window.console) {
+        window.console = {};
+    }
+    // union of Chrome, FF, IE, and Safari console methods
+    var m = [
+      "log", "info", "warn", "error", "debug", "trace", "dir", "group",
+      "groupCollapsed", "groupEnd", "time", "timeEnd", "profile", "profileEnd",
+      "dirxml", "assert", "count", "markTimeline", "timeStamp", "clear"
+    ];
+    // define undefined methods as noops to prevent errors    
+    for (var i = 0; i < m.length; i++) {
+        if (!window.console[m[i]]) {
+            if (m[i] == "error") {
+                window.console[m[i]] = function (e) { alert(e); }
+            }
+            window.console[m[i]] = function () { };
+        }
+    }
     var logger = {};
+    var consoleMethods = ["log", "error", "warn", "debug", "info"];    
     for (var cm in consoleMethods) {
         var method = consoleMethods[cm];
         logger[method] = (function (method) {
@@ -601,6 +618,9 @@
                 }
                 else {
                     result[name] = $element.is(":checked");
+                    if (result[name] == "on") { //IE fix
+                        result[name] = true;
+                    }
                 }
             }
             else if ($element.is("option:selected")) {
@@ -705,7 +725,7 @@
                 }
             },
             htmlevent: function (event, $widget, $element, settings, successSelector, failSelector, compiledParams, options) {
-                try { var logMessage = JSON.stringify(settings); } catch (ex) { }
+                var logMessage = ""; //try { var logMessage = JSON.stringify(settings); } catch (ex) { }
                 logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + logMessage);
                 if (settings.stopEventPropagation && settings.event != "load") {
                     event.preventDefault(); //prevent form submit

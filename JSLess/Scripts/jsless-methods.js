@@ -209,6 +209,9 @@
                 }
                 else {
                     result[name] = $element.is(":checked");
+                    if (result[name] == "on") { //IE fix
+                        result[name] = true;
+                    }
                 }
             }
             else if ($element.is("option:selected")) {
@@ -313,7 +316,7 @@
                 }
             },
             htmlevent: function (event, $widget, $element, settings, successSelector, failSelector, compiledParams, options) {
-                try { var logMessage = JSON.stringify(settings); } catch (ex) { }
+                var logMessage = ""; //try { var logMessage = JSON.stringify(settings); } catch (ex) { }
                 logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + logMessage);
                 if (settings.stopEventPropagation && settings.event != "load") {
                     event.preventDefault(); //prevent form submit
