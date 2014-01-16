@@ -47,7 +47,7 @@
                 });
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
-                var onEvent = function (event) {
+                var onEvent = function (event, eventData) {
                     var params = settings.params.slice(0);
                     if (settings.stopEventPropagation) {
                         event.stopPropagation();
@@ -76,6 +76,9 @@
                             $.each(params, function (indx, val) {
                                 if (params[indx] == "@event") {
                                     params[indx] = event;
+                                }
+                                if (params[indx] == "@eventData") {
+                                    params[indx] = eventData;
                                 }
                                 if (params[indx] == "@target") {
                                     params[indx] = $target;
@@ -170,12 +173,12 @@
                 }, behavior);
 
                 var $sourceSelector = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
-                var onEvent = function (event) {
+                var onEvent = function (event, eventData) {
                     var $parent = $sourceSelector;
                     if (settings.level > 0) {
                         $parent = $($parent.parents(settings.parentSelector)[settings.level - 1]);
                     }
-                    $parent.triggerHandler(settings.parentEvent);
+                    $parent.triggerHandler(settings.parentEvent, eventData);
                 }
                 if (settings.event == "load") {
                     $widget.one("jsless-widget-complete", onEvent);

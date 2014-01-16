@@ -75,6 +75,9 @@
             if (options && options.debug) {
                 jsless.debug = options.debug;
             }
+            if (options) {
+                $element.data("jsless-options", options);
+            }
             var settings = $.extend(true, {}, this.settings, options);
             var initTimer = new Date();
             if (!isSubWidget) {
@@ -435,6 +438,37 @@
                 }
             }
         },
+        dataMap: function (keys, data, deepCopy) {
+            var result = {}, key, temp, tResult;
+            for (key in keys) {
+                temp = key in data ? data[key] : null;
+                if (deepCopy && temp != null && typeof temp === 'object' && typeof keys[key] === 'object' && !(temp instanceof jQuery)) {
+                    temp = jsless.dataMap(keys[key], temp, deepCopy);
+                }
+
+                var transformTarget = keys[key];
+                var obj = result;
+                var name = null;
+                $.each(transformTarget.split("."), function (objIndx, objName) {
+                    if (name != null) {
+                        obj = obj[name];
+                    }
+                    if (obj[objName] === undefined) {
+                        obj[objName] = {};
+                    }
+                    name = objName;
+                });
+                if (typeof temp === 'object') {
+                    var rTemp = obj[name];
+                    obj[name] = $.extend(true, {}, rTemp, temp);
+                }
+                else {
+                    obj[name] = temp;
+                }
+
+            }
+            return result
+        },
         getSelector: function (selector, $widget, $element) {
             if (selector == null) {
                 throw "selector is null";
@@ -714,7 +748,8 @@
                 var failSelector = jsless.getSelector(settings.onFail, $widget, $element);
                 var compiledParams = jsless.compileParams(settings.params, $widget, $element);
 
-                var onEvent = function (event) {
+                var onEvent = function (event, eventData) {
+                    settings.eventData = eventData;
                     jsless._methods.htmlevent(event, $widget, $element, settings, successSelector, failSelector, compiledParams, options);
                 }
                 if (settings.event == "load") {
@@ -734,6 +769,11 @@
                 var $success = successSelector.getVal();
                 var $fail = failSelector.getVal();
 
+                if (settings.eventDataMap && settings.eventData) {
+                    var eventData = jsless.dataMap(settings.eventDataMap, settings.eventData);
+                    $.extend(params, eventData);
+                }
+
                 var request = $element.triggerHandler("jsless-" + settings.name + "-begin", [compiledParams]); // allow for intercept and termination (validation)
                 if (request === undefined || request) {
                     $element.trigger("jsless-ajax-begin");
@@ -747,6 +787,7 @@
                         onComplete: function (ajaxResponse) {
                             ajaxResponse.success = ajaxResponse.success && ajaxResponse.isHTML;
                             var $html = $(ajaxResponse.data);
+                            var eventParams = jsless.processContainer($html.find("[data-jsless-params]"));
                             if ($html.attr("data-jsless-error")) {
                                 ajaxResponse.success = false;
                                 ajaxResponse.errormessage = $html.attr("data-jsless-error");
@@ -757,14 +798,14 @@
                                 selector = failSelector;
                                 $targets = $fail;
                                 $element.trigger("jsless-ajax-beforefail");
-                                $targets.triggerHandler("jsless-" + settings.name + "-beforefail");
+                                $targets.triggerHandler("jsless-" + settings.name + "-beforefail", [eventParams]);
                             }
                             else {
                                 $element.trigger("jsless-ajax-beforesuccess");
-                                $targets.triggerHandler("jsless-" + settings.name + "-beforesuccess");
+                                $targets.triggerHandler("jsless-" + settings.name + "-beforesuccess", [eventParams]);
                             }
                             $element.trigger("jsless-ajax-beforecomplete");
-                            $targets.triggerHandler("jsless-" + settings.name + "-beforecomplete");
+                            $targets.triggerHandler("jsless-" + settings.name + "-beforecomplete", [eventParams]);
                             $.each($targets, function (index, elem) {
                                 var $target = $(elem);
                                 var $data = $html.clone();
@@ -773,14 +814,14 @@
                             });
                             if (ajaxResponse.success) {
                                 $element.trigger("jsless-ajax-success");
-                                $targets.triggerHandler("jsless-" + settings.name + "-success");
+                                $targets.triggerHandler("jsless-" + settings.name + "-success", [eventParams]);
                             }
                             else {
                                 $element.trigger("jsless-ajax-fail");
-                                $targets.triggerHandler("jsless-" + settings.name + "-fail");
+                                $targets.triggerHandler("jsless-" + settings.name + "-fail", [eventParams]);
                             }
                             $element.trigger("jsless-ajax-complete");
-                            $targets.triggerHandler("jsless-" + settings.name + "-complete");
+                            $targets.triggerHandler("jsless-" + settings.name + "-complete", [eventParams]);
                         },
                         retryCount: 0
                     };
@@ -876,7 +917,7 @@
                 });
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
-                var onEvent = function (event) {
+                var onEvent = function (event, eventData) {
                     var params = settings.params.slice(0);
                     if (settings.stopEventPropagation) {
                         event.stopPropagation();
@@ -905,6 +946,9 @@
                             $.each(params, function (indx, val) {
                                 if (params[indx] == "@event") {
                                     params[indx] = event;
+                                }
+                                if (params[indx] == "@eventData") {
+                                    params[indx] = eventData;
                                 }
                                 if (params[indx] == "@target") {
                                     params[indx] = $target;
@@ -999,12 +1043,12 @@
                 }, behavior);
 
                 var $sourceSelector = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
-                var onEvent = function (event) {
+                var onEvent = function (event, eventData) {
                     var $parent = $sourceSelector;
                     if (settings.level > 0) {
                         $parent = $($parent.parents(settings.parentSelector)[settings.level - 1]);
                     }
-                    $parent.triggerHandler(settings.parentEvent);
+                    $parent.triggerHandler(settings.parentEvent, eventData);
                 }
                 if (settings.event == "load") {
                     $widget.one("jsless-widget-complete", onEvent);
