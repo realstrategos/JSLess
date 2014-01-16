@@ -75,6 +75,9 @@
             if (options && options.debug) {
                 jsless.debug = options.debug;
             }
+            if (options) {
+                $element.data("jsless-options", options);
+            }
             var settings = $.extend(true, {}, this.settings, options);
             var initTimer = new Date();
             if (!isSubWidget) {
