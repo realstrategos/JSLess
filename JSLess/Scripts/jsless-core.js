@@ -103,7 +103,7 @@
                 var temp = $(this).parentsUntil($element, "[data-jsless-widget]").length == 0;
                 return temp;
             });
-            var $targets = $element.find("[data-jsless]").addBack("[data-jsless]");
+            var $targets = $element.find("[data-jsless]:not([data-jsless-widget])").addBack("[data-jsless]");
             $targets = $targets.filter(function (index) {
                 var temp = $(this).parentsUntil($element.parent(), "[data-jsless-widget][data-jsless-widget!=" + widgetID + "]").length == 0;
                 return temp;
