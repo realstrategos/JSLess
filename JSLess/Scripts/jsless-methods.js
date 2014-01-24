@@ -394,22 +394,26 @@
                             }
                             $element.trigger("jsless-ajax-beforecomplete");
                             $targets.triggerHandler("jsless-" + settings.name + "-beforecomplete", [eventParams]);
-                            $.each($targets, function (index, elem) {
-                                var $target = $(elem);
-                                var $data = $html.clone();
-                                $target[selector.mode]($data);
-                                $data.jsless(options);
-                            });
-                            if (ajaxResponse.success) {
-                                $element.trigger("jsless-ajax-success");
-                                $targets.triggerHandler("jsless-" + settings.name + "-success", [eventParams]);
-                            }
-                            else {
-                                $element.trigger("jsless-ajax-fail");
-                                $targets.triggerHandler("jsless-" + settings.name + "-fail", [eventParams]);
-                            }
-                            $element.trigger("jsless-ajax-complete");
-                            $targets.triggerHandler("jsless-" + settings.name + "-complete", [eventParams]);
+                            setTimeout(function () {
+                                $.each($targets, function (index, elem) {
+                                    var $target = $(elem);
+                                    var $data = $html.clone();
+                                    $target[selector.mode]($data);
+                                    $data.jsless(options);
+                                });
+                                setTimeout(function () {
+                                    if (ajaxResponse.success) {
+                                        $element.trigger("jsless-ajax-success");
+                                        $targets.triggerHandler("jsless-" + settings.name + "-success", [eventParams]);
+                                    }
+                                    else {
+                                        $element.trigger("jsless-ajax-fail");
+                                        $targets.triggerHandler("jsless-" + settings.name + "-fail", [eventParams]);
+                                    }
+                                    $element.trigger("jsless-ajax-complete");
+                                    $targets.triggerHandler("jsless-" + settings.name + "-complete", [eventParams]);
+                                }, 0);
+                            }, 0);
                         },
                         retryCount: 0
                     };
