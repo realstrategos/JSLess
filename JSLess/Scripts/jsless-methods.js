@@ -112,6 +112,9 @@
                 settings.mode = "replaceWith";
                 $val = $widget;
             }
+            else if (selector == "body") {
+                $val = $("body");
+            }
             else if (selector == "form") {
                 $val = $element.parents("form").first();
             }
@@ -218,7 +221,7 @@
                     result[name].push($element.val());
                 }
             }
-            else if ($element.is("input[data-type='enum']:checkbox")) {                
+            else if ($element.is("input[data-type='enum']:checkbox")) {
                 if ($element.is(":checked")) {
                     var temp = result[name] || "";
                     if (temp.length > 0) {
