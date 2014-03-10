@@ -19,7 +19,8 @@
                 name: null,
                 onSuccess: "widget",
                 onFail: "widget",
-                eventSource: 'self',                
+                eventSource: 'self',
+                delay: -1,
                 params: {
                     dynamic: {},
                     forms: []
@@ -420,7 +421,19 @@
                         },
                         retryCount: 0
                     };
-                    jsless.invoke(ajaxSettings);
+                    var start = function () {
+                        if ($success.parents("body").length == 0) {
+                            logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: $success is detached");
+                            return;
+                        }
+                        jsless.invoke(ajaxSettings);
+                    }
+                    if (settings.delay < 0) {
+                        start();
+                    }
+                    else {
+                        setTimeout(start, settings.delay);
+                    }
                 }
             },
             htmlform: function ($widget, $element, behavior, options) {
