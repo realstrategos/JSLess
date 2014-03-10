@@ -55,7 +55,7 @@
 
     window.jsless = $.extend(true, {
         debug: false,
-        log: true,
+        log: false,
         logger: logger
     }, window.jsless || {});
     var _jsless = {
@@ -173,7 +173,6 @@
         jsless.debug = false; //turn off debugging after load notices
     }, 0);
 }(window.jQuery);
-
 
 
 
@@ -408,7 +407,6 @@
     logger.info("Loading Invoke ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
-
 
 
 
@@ -890,7 +888,6 @@
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
 
-
 /*!
  * JSLess Library - Builtin Behaviors
  * https://github.com/realstrategos/JSLess
@@ -1086,7 +1083,6 @@
     logger.info("Loading Behaviors ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
-
 
 
 
