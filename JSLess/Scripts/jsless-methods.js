@@ -19,7 +19,7 @@
                 name: null,
                 onSuccess: "widget",
                 onFail: "widget",
-                eventSource: 'self',
+                eventSource: 'self',                
                 params: {
                     dynamic: {},
                     forms: []
@@ -262,7 +262,7 @@
             return result;
         },
         processContainer: function ($container) {
-            var complex = "[name],[data-list]";
+            var complex = "[name],[data-list],[data-index]";
             var simple = "input[type!='button'][type!='submit'],select,textarea,[contenteditable]";
 
             //get toplevel elements
