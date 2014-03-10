@@ -176,6 +176,7 @@
 
 
 
+
 /*!
  * JSLess Library - AJAX Invoke
  * https://github.com/realstrategos/JSLess
@@ -410,6 +411,7 @@
 
 
 
+
 /*!
  * JSLess Library - Builtin Methods
  * https://github.com/realstrategos/JSLess
@@ -432,6 +434,7 @@
                 onSuccess: "widget",
                 onFail: "widget",
                 eventSource: 'self',
+                delay: -1,
                 params: {
                     dynamic: {},
                     forms: []
@@ -674,7 +677,7 @@
             return result;
         },
         processContainer: function ($container) {
-            var complex = "[name],[data-list]";
+            var complex = "[name],[data-list],[data-index]";
             var simple = "input[type!='button'][type!='submit'],select,textarea,[contenteditable]";
 
             //get toplevel elements
@@ -832,7 +835,19 @@
                         },
                         retryCount: 0
                     };
-                    jsless.invoke(ajaxSettings);
+                    var start = function () {
+                        if ($success.parents("body").length == 0) {
+                            logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: $success is detached");
+                            return;
+                        }
+                        jsless.invoke(ajaxSettings);
+                    }
+                    if (settings.delay < 0) {
+                        start();
+                    }
+                    else {
+                        setTimeout(start, settings.delay);
+                    }
                 }
             },
             htmlform: function ($widget, $element, behavior, options) {
@@ -874,6 +889,7 @@
     logger.info("Loading Methods ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
+
 
 /*!
  * JSLess Library - Builtin Behaviors
@@ -1070,6 +1086,7 @@
     logger.info("Loading Behaviors ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
+
 
 
 

@@ -55,7 +55,7 @@
 
     window.jsless = $.extend(true, {
         debug: false,
-        log: true,
+        log: false,
         logger: logger
     }, window.jsless || {});
     var _jsless = {
