@@ -113,7 +113,17 @@
             $targets.each(function (tIndex, target) {
                 var $target = $(target);
                 //find my widget
-                var behaviors = $.parseJSON($target.attr("data-jsless"));
+                var rawBehavior = $target.attr("data-jsless");
+                var behaviors = [];
+                if (rawBehavior.indexOf('[{"') == 0) {
+                    behaviors = $.parseJSON(rawBehavior);
+                }
+                else {//need threat assesment on this
+                    var checkMe = eval(rawBehavior);
+                    if (Object.prototype.toString.call(checkMe) === '[object Array]') {
+                        behaviors = checkMe;
+                    }
+                }
                 $(behaviors).each(function (index, behavior) {
                     jsless.processBehavior($widget, $target, behavior, settings);
                 });
