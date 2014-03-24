@@ -163,6 +163,11 @@
             return this.each(function () {
                 var $this = $(this)
                 $this.prop(propName, !$this.prop(propName));
+                if ($this.is("input[type=checkbox]") && propName == "checked") {
+                    setTimeout(function () {
+                        $this.trigger("change");
+                    }, 0);
+                }
             })
         }
     }
