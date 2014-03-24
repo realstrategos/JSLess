@@ -163,6 +163,11 @@
             return this.each(function () {
                 var $this = $(this)
                 $this.prop(propName, !$this.prop(propName));
+                if ($this.is("input[type=checkbox]") && propName == "checked") {
+                    setTimeout(function () {
+                        $this.trigger("change");
+                    }, 0);
+                }
             })
         }
     }
@@ -950,8 +955,8 @@
                         $.each(dynamicParams, function (indx, indxVal) {
                             var val = jsless.getParams(dynamicParams[indx]);
                             if (typeof val === "object") {
-                                params[indx] = params[indx] || {};
-                                $.extend(true, params[indx], val);
+                                //params[indx] = params[indx] || {};
+                                $.extend(true, params, val);
                             }
                             else {
                                 params[indx] = val;
