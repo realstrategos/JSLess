@@ -212,60 +212,61 @@
             return result;
         },
         getValue: function ($element, result, name) {
-            if ($element.attr("contenteditable") != null) {
-                result[name] = $element.html();
-            }
-            else if ($element.is("select[multiple] option:selected")) {
-                result[name] = result[name] || [];
-                result[name].push($element.val());
-            }
-            else if ($element.is("input[data-list]:checkbox")) {
-                result[name] = result[name] || [];
-                if ($element.is(":checked")) {
-                    result[name].push($element.val());
+            var getVal = function () {
+                var val = null;
+                if ($element.is("select")) {
+                    $element.find("option:selected").each(function (index, item) {
+                        result = jsless.getValue($(item), result, name);
+                    });
                 }
-            }
-            else if ($element.is("input[data-type='enum']:checkbox")) {
-                if ($element.is(":checked")) {
-                    var temp = result[name] || "";
-                    if (temp.length > 0) {
-                        temp += ", ";
+                else if ($element.attr("contenteditable") != null) {
+                    val = $element.html();
+                }
+                else if ($element.is("input:checkbox,input:radio")) {
+                    if ($element.is("input[value]")) {
+                        if ($element.is(":checked")) {
+                            val = $element.val();
+                        }
                     }
-                    temp += $element.val();
-                    result[name] = temp;
-                }
-            }
-            else if ($element.is("input[data-list]")) {
-                result[name] = result[name] || [];
-                result[name].push($element.val());
-            }
-            else if ($element.is("input:checkbox,input:radio")) {
-                if ($element.is("input[value]")) {
-                    if ($element.is(":checked")) {
-                        result[name] = $element.val();
+                    else {
+                        val = $element.is(":checked");
+                        if (val == "on") { //IE fix
+                            val = true;
+                        }
                     }
                 }
                 else {
-                    result[name] = $element.is(":checked");
-                    if (result[name] == "on") { //IE fix
-                        result[name] = true;
-                    }
+                    val = $element.val();
                 }
+                return val;
             }
-            else if ($element.is("option:selected")) {
-                result[name] = $element.val();
-            }
-            else if ($element.is("select")) {
-                $element.find("option:selected").each(function (index, item) {
-                    result = jsless.getValue($(item), result, name);
-                });
-            }
-            else {
-                result[name] = $element.val();
+
+            var data = getVal();
+            if (data) {
+                if ($element.is("[data-type='enum'],[data-commalist]")) {
+                    var temp = result[name] || "";
+                    if (!$element.is("input:checkbox,input:radio") || $element.is(":checked")) {
+                        if (temp.length > 0) {
+                            temp += ", ";
+                        }
+                        temp += data;
+                    }
+                    data = temp;
+                }
+                if ($element.is("[data-index]")) {
+                    result[name] = data;
+                }
+                else if ($element.is("[data-list]") || $element.is("select[multiple] option:selected")) {
+                    result[name] = result[name] || [];
+                    result[name].push(data);
+                }
+                else {
+                    result[name] = data;
+                }
             }
             return result;
         },
-        processContainer: function ($container) {
+        processContainer: function ($container, indexName) {
             var complex = "[name],[data-list],[data-index]";
             var simple = "input[type!='button'][type!='submit'],select,textarea,[contenteditable]";
 
@@ -280,12 +281,20 @@
             var result = {};
             $.each($simple, function (index, element) {
                 var $element = $(element);
-                var name = $element.attr("name");
+
+                var name = indexName;
                 if ($element.attr("data-list")) {
                     name = $element.attr("data-list");
                 }
-                else if ($element.attr("data-index") != null) {
-                    name += "[" + $element.attr("data-index") + "]";
+                if ($element.attr("data-name")) {
+                    name = $element.attr("data-name");
+                }
+                if ($element.attr("data-index") != null) {
+                    name = (name || "") + "[" + $element.attr("data-index") + "]";
+
+                }
+                if (!name) {
+                    name = $element.attr("name");
                 }
                 if (name == null) {
                     logger.warn("element has no name: " + $element[0].outerHTML);
@@ -301,15 +310,24 @@
 
                 if ($element.attr("data-list") != null) {
                     var name = $element.attr("data-list");
-                    result[name] = result[name] || [];
                     if (!jQuery.isEmptyObject(temp)) {
-                        result[name].push(temp);
+                        if ($element.attr("data-index") != null) {
+                            name = (name || "") + "[" + $element.attr("data-index") + "]";
+                            $.extend(result, jsless.processContainer($element, name));
+                        }
+                        else {
+                            result[name] = result[name] || [];
+                            result[name].push(temp);
+                        }
                     }
                 }
                 else {
                     var name = $element.attr("name");
                     if ($element.attr("data-index") != null) {
                         name += "[" + $element.attr("data-index") + "]";
+                        if (result[name]) {
+                            temp = $.extend({}, result[name], temp)
+                        }
                     }
                     result[name] = temp;
                 }
