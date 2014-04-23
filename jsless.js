@@ -191,6 +191,7 @@
 
 
 
+
 /*!
  * JSLess Library - AJAX Invoke
  * https://github.com/realstrategos/JSLess
@@ -425,6 +426,7 @@
 
 
 
+
 /*!
  * JSLess Library - Builtin Methods
  * https://github.com/realstrategos/JSLess
@@ -542,6 +544,9 @@
             }
             else if (selector == "body") {
                 $val = $("body");
+            }
+            else if (selector == "document") {
+                $val = $(document);
             }
             else if (selector == "form") {
                 $val = $element.parents("form").first();
@@ -905,6 +910,7 @@
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
 
+
 /*!
  * JSLess Library - Builtin Behaviors
  * https://github.com/realstrategos/JSLess
@@ -1100,6 +1106,7 @@
     logger.info("Loading Behaviors ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
+
 
 
 
