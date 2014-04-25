@@ -325,11 +325,10 @@
                     var name = $element.attr("name");
                     if ($element.attr("data-index") != null) {
                         name += "[" + $element.attr("data-index") + "]";
-                        if (result[name]) {
-                            temp = $.extend({}, result[name], temp)
-                        }
                     }
-                    result[name] = temp;
+                    if (result[name]) {
+                        temp = $.extend({}, result[name], temp)
+                    }
                 }
             });
 
