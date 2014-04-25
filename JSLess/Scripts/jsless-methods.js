@@ -329,6 +329,7 @@
                     if (result[name]) {
                         temp = $.extend({}, result[name], temp)
                     }
+                    result[name] = temp;
                 }
             });
 
