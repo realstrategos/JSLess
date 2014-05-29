@@ -83,6 +83,9 @@
                                 if (params[indx] == "@target") {
                                     params[indx] = $target;
                                 }
+                                if (val instanceof Function) {
+                                    params[indx] = val();
+                                }
                             });
                             if (settings.object != "jQuery") {
                                 var object = window;

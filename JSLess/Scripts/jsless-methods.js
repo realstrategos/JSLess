@@ -119,6 +119,9 @@
             else if (selector == "document") {
                 $val = $(document);
             }
+            else if (selector == "window") {
+                $val = $(window);
+            }
             else if (selector == "form") {
                 $val = $element.parents("form").first();
             }
