@@ -245,7 +245,7 @@
             }
 
             var data = getVal();
-            if (data) {
+            if (data != null) {
                 if ($element.is("[data-type='enum'],[data-commalist]")) {
                     var temp = result[name] || "";
                     if (!$element.is("input:checkbox,input:radio") || $element.is(":checked")) {

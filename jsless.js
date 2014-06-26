@@ -191,7 +191,6 @@
 
 
 
-
 /*!
  * JSLess Library - AJAX Invoke
  * https://github.com/realstrategos/JSLess
@@ -423,7 +422,6 @@
     logger.info("Loading Invoke ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
-
 
 
 
@@ -674,7 +672,7 @@
             }
 
             var data = getVal();
-            if (data) {
+            if (data != null) {
                 if ($element.is("[data-type='enum'],[data-commalist]")) {
                     var temp = result[name] || "";
                     if (!$element.is("input:checkbox,input:radio") || $element.is(":checked")) {
@@ -931,7 +929,6 @@
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
 
-
 /*!
  * JSLess Library - Builtin Behaviors
  * https://github.com/realstrategos/JSLess
@@ -1130,7 +1127,6 @@
     logger.info("Loading Behaviors ...");
     window.jsless = $.extend(true, _jsless, window.jsless || {}); //extend allowing overrides;
 }(window.jQuery);
-
 
 
 
