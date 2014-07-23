@@ -597,6 +597,7 @@
                 });
                 params.forms = forms;
             }
+            params.scope = { widget: $widget, element: $element };
             return params;
         },
         getParams: function (compiledParams) { //runtime evalution
@@ -628,15 +629,21 @@
                     $.extend(forms, formValues);
                 });
                 delete params.forms;
-            }
+            }            
             var temp = {};
             $.each(params, function (indx, val) {
                 var name = indx;
-                if (indx.indexOf("_dynamic") > 0 || indx.indexOf("_forms") > 0) {
+                if (indx.indexOf("_dynamic") > 0 || indx.indexOf("_forms") > 0 || indx.index("_scope") > 0) {
                     name = indx.substr(1);
                 }
-                temp[name] = val;
+                if (typeof val == 'function') {
+                    temp[name] = val(params.scope);
+                }
+                else {
+                    temp[name] = val;
+                }
             });
+            delete params.scope;
 
             var result = $.extend(true, {}, forms, temp, dynamicParams);
             return result;
