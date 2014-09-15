@@ -597,10 +597,9 @@
                 });
                 params.forms = forms;
             }
-            params.scope = { widget: $widget, element: $element };
             return params;
         },
-        getParams: function (compiledParams) { //runtime evalution
+        getParams: function (compiledParams, $widget, $element) { //runtime evalution
             var params = $.extend({}, compiledParams);
 
             var dynamicParams = {};
@@ -629,21 +628,20 @@
                     $.extend(forms, formValues);
                 });
                 delete params.forms;
-            }            
+            }
             var temp = {};
             $.each(params, function (indx, val) {
                 var name = indx;
-                if (indx.indexOf("_dynamic") > 0 || indx.indexOf("_forms") > 0 || indx.index("_scope") > 0) {
+                if (indx.indexOf("_dynamic") > 0 || indx.indexOf("_forms") > 0) {
                     name = indx.substr(1);
                 }
                 if (typeof val == 'function') {
-                    temp[name] = val(params.scope);
+                    temp[name] = val({ widget: $widget, element: $element });
                 }
                 else {
                     temp[name] = val;
                 }
             });
-            delete params.scope;
 
             var result = $.extend(true, {}, forms, temp, dynamicParams);
             return result;
@@ -815,7 +813,7 @@
                 if (settings.stopEventPropagation && settings.event != "load") {
                     event.preventDefault(); //prevent form submit
                 }
-                var params = jsless.getParams(compiledParams);
+                var params = jsless.getParams(compiledParams, $widget, $element);
                 var $success = successSelector.getVal();
                 var $fail = failSelector.getVal();
 
@@ -1030,7 +1028,7 @@
                         var $target = targetSelector.getVal();
 
                         $.each(dynamicParams, function (indx, indxVal) {
-                            var val = jsless.getParams(dynamicParams[indx]);
+                            var val = jsless.getParams(dynamicParams[indx], $widget, $element);
                             if (typeof val === "object") {
                                 //params[indx] = params[indx] || {};
                                 $.extend(true, params, val);

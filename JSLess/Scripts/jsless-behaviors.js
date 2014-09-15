@@ -76,7 +76,7 @@
                         var $target = targetSelector.getVal();
 
                         $.each(dynamicParams, function (indx, indxVal) {
-                            var val = jsless.getParams(dynamicParams[indx]);
+                            var val = jsless.getParams(dynamicParams[indx], $widget, $element);
                             if (typeof val === "object") {
                                 //params[indx] = params[indx] || {};
                                 $.extend(true, params, val);
