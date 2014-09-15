@@ -21,12 +21,31 @@
                 eventSource: 'self',
                 target: 'self',
                 delay: -1,
+                cancelDelay: null,
                 params: [],
                 dynamic: [],
                 stopEventPropagation: false
             }
         },
         behaviors: {
+            base: function ($widget, $element, settings, onEvent) {
+                var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
+
+                if (settings.event == "load") {
+                    $widget.one("jsless-widget-complete", onEvent);
+                }
+                else {
+                    var behavior = function () {
+                        var timer = setTimeout(onEvent, settings.delay || 0);
+                        if (settings.delay > 0 && settings.cancelDelay) {
+                            $eventSource.one(settings.cancelDelay, function () {
+                                clearTimeout(timer);
+                            });
+                        }
+                    }
+                    $eventSource.bind(settings.event, behavior);
+                }
+            },
             execute: function ($widget, $element, behavior, options) {
                 var settings = $.extend(true, {}, jsless.settings.behavior, options.behavior, {
                     name: 'execute',
@@ -45,7 +64,6 @@
                     var compiled = jsless.compileParams({ dynamic: settings.dynamic[indx] }, $widget, $element);
                     dynamicParams[indx] = compiled;
                 });
-                var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
                 var onEvent = function (event, eventData) {
                     var params = settings.params.slice(0);
@@ -56,7 +74,7 @@
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
                         var $target = targetSelector.getVal();
-                        
+
                         $.each(dynamicParams, function (indx, indxVal) {
                             var val = jsless.getParams(dynamicParams[indx]);
                             if (typeof val === "object") {
@@ -68,49 +86,37 @@
                             }
                         });
 
-                        var complete = function () {
-                            $element.triggerHandler("jsless-" + settings.name + "-beforecomplete");
-                            var object = $target;
-                            var method = $target[settings.method];
 
-                            $.each(params, function (indx, val) {
-                                if (params[indx] == "@event") {
-                                    params[indx] = event;
-                                }
-                                if (params[indx] == "@eventData") {
-                                    params[indx] = eventData;
-                                }
-                                if (params[indx] == "@target") {
-                                    params[indx] = $target;
-                                }
-                                if (val instanceof Function) {
-                                    params[indx] = val();
-                                }
-                            });
-                            if (settings.object != "jQuery") {
-                                var object = window;
-                                $.each(settings.object.split("."), function (indx, oname) {
-                                    object = object[oname];
-                                });
-                                var method = object[settings.method];
+                        $element.triggerHandler("jsless-" + settings.name + "-beforecomplete");
+                        var object = $target;
+                        var method = $target[settings.method];
+
+                        $.each(params, function (indx, val) {
+                            if (params[indx] == "@event") {
+                                params[indx] = event;
                             }
-                            var result = method.apply(object, params);
-                            $element.triggerHandler("jsless-" + settings.name + "-complete");
+                            if (params[indx] == "@eventData") {
+                                params[indx] = eventData;
+                            }
+                            if (params[indx] == "@target") {
+                                params[indx] = $target;
+                            }
+                            if (val instanceof Function) {
+                                params[indx] = val();
+                            }
+                        });
+                        if (settings.object != "jQuery") {
+                            var object = window;
+                            $.each(settings.object.split("."), function (indx, oname) {
+                                object = object[oname];
+                            });
+                            var method = object[settings.method];
                         }
-                        if (settings.delay < 0) {
-                            complete();
-                        }
-                        else {
-                            setTimeout(complete, settings.delay);
-                        }
+                        var result = method.apply(object, params);
+                        $element.triggerHandler("jsless-" + settings.name + "-complete");
                     }
                 };
-                if (settings.event == "load") {
-                    $widget.one("jsless-widget-complete", onEvent);
-                }
-                else {
-                    $eventSource.bind(settings.event, onEvent);
-                }
+                jsless.behaviors.base($widget, $element, settings, onEvent);
             },
             keyclick: function ($widget, $element, behavior, options) {
                 /*
@@ -124,9 +130,8 @@
                 }, behavior);
 
                 var params = settings.params;
-                var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
-                $eventSource.bind(settings.event, function (event) {
+                var onEvent = function (event, eventData) {
                     logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + JSON.stringify(settings));
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
@@ -137,7 +142,8 @@
                             $targets.triggerHandler("click");
                         }
                     }
-                });
+                }
+                jsless.behaviors.base($widget, $element, settings, onEvent);
             },
             toggleClass: function ($widget, $element, behavior, options) {
                 /*
@@ -151,9 +157,8 @@
                     logger.error("className not specified: " + JSON.stringify(settings));
                 }
                 var params = settings.params;
-                var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
-                $eventSource.bind(settings.event, function (event) {
+                var onEvent = function (event, eventData) {
                     logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + JSON.stringify(settings));
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
@@ -164,7 +169,8 @@
                         $target.removeClass(className);
                         $source.addClass(className);
                     }
-                });
+                }
+                jsless.behaviors.base($widget, $element, settings, onEvent);
             },
             parentTrigger: function ($widget, $element, behavior, options) {
                 var settings = $.extend(true, {}, jsless.settings.behavior, options.method, {
@@ -175,20 +181,14 @@
                     level: 1
                 }, behavior);
 
-                var $sourceSelector = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var onEvent = function (event, eventData) {
-                    var $parent = $sourceSelector;
+                    var $parent = $(event.target);
                     if (settings.level > 0) {
                         $parent = $($parent.parents(settings.parentSelector)[settings.level - 1]);
                     }
                     $parent.triggerHandler(settings.parentEvent, eventData);
                 }
-                if (settings.event == "load") {
-                    $widget.one("jsless-widget-complete", onEvent);
-                }
-                else {
-                    $sourceSelector.bind(settings.event, onEvent);
-                }
+                jsless.behaviors.base($widget, $element, settings, onEvent);
             }
         }
     }
