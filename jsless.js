@@ -987,15 +987,16 @@
                     $widget.one("jsless-widget-complete", onEvent);
                 }
                 else {
-                    var behavior = function () {
-                        var timer = setTimeout(onEvent, settings.delay || 0);
+                    $eventSource.bind(settings.event, function (event, eventData) {
+                        var timer = setTimeout(function () {
+                            onEvent(event, eventData);
+                        }, settings.delay || 0);
                         if (settings.delay > 0 && settings.cancelDelay) {
                             $eventSource.one(settings.cancelDelay, function () {
                                 clearTimeout(timer);
                             });
                         }
-                    }
-                    $eventSource.bind(settings.event, behavior);
+                    });
                 }
             },
             execute: function ($widget, $element, behavior, options) {
