@@ -220,7 +220,7 @@
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
-    <PreBuildEvent>$(MSBuildBinPath)\msbuild.exe "$(ProjectDir)_Compressor\Client.xml" /p:SFolder="$(SolutionDir)/" /p:PFolder="$(ProjectDir)/"</PreBuildEvent>
+    <PreBuildEvent>"$(MSBuildBinPath)\msbuild.exe" "$(ProjectDir)_Compressor\Client.xml" /p:SFolder="$(SolutionDir)/" /p:PFolder="$(ProjectDir)/"</PreBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.10\tools\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
