@@ -32,11 +32,13 @@
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
 
                 if (settings.event == "load") {
-                    $widget.one("jsless-widget-complete", function () {
+                    $widget.one("jsless-widget-complete", function () {                        
                         if (settings.delay >= 0) {
-                            setTimeout(onEvent, settings.delay)
+                            setTimeout(function () {
+                                onEvent(event, eventData);
+                            }, settings.delay)
                         } else {
-                            onEvent();
+                            onEvent(event, eventData);
                         }
                     });
                 }
