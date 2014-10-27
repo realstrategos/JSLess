@@ -984,7 +984,13 @@
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
 
                 if (settings.event == "load") {
-                    $widget.one("jsless-widget-complete", onEvent);
+                    $widget.one("jsless-widget-complete", function () {
+                        if (settings.delay >= 0) {
+                            setTimeout(onEvent, settings.delay)
+                        } else {
+                            onEvent();
+                        }
+                    });
                 }
                 else {
                     if (settings.delay >= 0) {
