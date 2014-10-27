@@ -35,16 +35,21 @@
                     $widget.one("jsless-widget-complete", onEvent);
                 }
                 else {
-                    $eventSource.bind(settings.event, function (event, eventData) {
-                        var timer = setTimeout(function () {
-                            onEvent(event, eventData);
-                        }, settings.delay || 0);
-                        if (settings.delay > 0 && settings.cancelDelay) {
-                            $eventSource.one(settings.cancelDelay, function () {
-                                clearTimeout(timer);
-                            });
-                        }
-                    });
+                    if (settings.delay >= 0) {
+                        $eventSource.bind(settings.event, function (event, eventData) {
+                            var timer = setTimeout(function () {
+                                onEvent(event, eventData);
+                            }, settings.delay);
+                            if (settings.delay > 0 && settings.cancelDelay) {
+                                $eventSource.one(settings.cancelDelay, function () {
+                                    clearTimeout(timer);
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        $eventSource.bind(settings.event, onEvent);
+                    }
                 }
             },
             execute: function ($widget, $element, behavior, options) {
