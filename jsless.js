@@ -447,6 +447,7 @@
                 onSuccess: "widget",
                 onFail: "widget",
                 eventSource: 'self',
+                requireEnabled: false,
                 delay: -1,
                 params: {
                     dynamic: {},
@@ -797,8 +798,10 @@
                 var compiledParams = jsless.compileParams(settings.params, $widget, $element);
 
                 var onEvent = function (event, eventData) {
-                    settings.eventData = eventData;
-                    jsless._methods.htmlevent(event, $widget, $element, settings, successSelector, failSelector, compiledParams, options);
+                    if (!settings.requireEnabled || $source.is(":enabled")) {
+                        settings.eventData = eventData;
+                        jsless._methods.htmlevent(event, $widget, $element, settings, successSelector, failSelector, compiledParams, options);
+                    }
                 }
                 if (settings.event == "load") {
                     $widget.one("jsless-widget-complete", onEvent);
@@ -971,6 +974,7 @@
                 name: null,
                 event: 'click',
                 eventSource: 'self',
+                requireEnabled: false,
                 target: 'self',
                 delay: -1,
                 cancelDelay: null,
@@ -983,14 +987,20 @@
             base: function ($widget, $element, settings, onEvent) {
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
 
+                var checkedEvent = function (event, eventData) {
+                    if (!settings.requireEnabled || $eventSource.is(":enabled")) {
+                        onEvent(event, eventData);
+                    }
+                }
+
                 if (settings.event == "load") {
                     $widget.one("jsless-widget-complete", function (event, eventData) {                        
                         if (settings.delay >= 0) {
                             setTimeout(function () {
-                                onEvent(event, eventData);
+                                checkedEvent(event, eventData);
                             }, settings.delay)
                         } else {
-                            onEvent(event, eventData);
+                            checkedEvent(event, eventData);
                         }
                     });
                 }
@@ -998,7 +1008,7 @@
                     if (settings.delay >= 0) {
                         $eventSource.bind(settings.event, function (event, eventData) {
                             var timer = setTimeout(function () {
-                                onEvent(event, eventData);
+                                checkedEvent(event, eventData);
                             }, settings.delay);
                             if (settings.delay > 0 && settings.cancelDelay) {
                                 $eventSource.one(settings.cancelDelay, function () {
@@ -1008,7 +1018,7 @@
                         });
                     }
                     else {
-                        $eventSource.bind(settings.event, onEvent);
+                        $eventSource.bind(settings.event, checkedEvent);
                     }
                 }
             },

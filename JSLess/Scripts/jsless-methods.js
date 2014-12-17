@@ -20,6 +20,7 @@
                 onSuccess: "widget",
                 onFail: "widget",
                 eventSource: 'self',
+                requireEnabled: false,
                 delay: -1,
                 params: {
                     dynamic: {},
@@ -370,8 +371,10 @@
                 var compiledParams = jsless.compileParams(settings.params, $widget, $element);
 
                 var onEvent = function (event, eventData) {
-                    settings.eventData = eventData;
-                    jsless._methods.htmlevent(event, $widget, $element, settings, successSelector, failSelector, compiledParams, options);
+                    if (!settings.requireEnabled || $source.is(":enabled")) {
+                        settings.eventData = eventData;
+                        jsless._methods.htmlevent(event, $widget, $element, settings, successSelector, failSelector, compiledParams, options);
+                    }
                 }
                 if (settings.event == "load") {
                     $widget.one("jsless-widget-complete", onEvent);
