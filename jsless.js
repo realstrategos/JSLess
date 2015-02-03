@@ -553,6 +553,9 @@
             else if (selector == "form") {
                 $val = $element.parents("form").first();
             }
+            else if (selector == "empty") {
+                $val = $("<div></div>");
+            }
             else if (settings.latebind) {
                 settings.getVal = locator;
             }
@@ -878,9 +881,11 @@
                             setTimeout(function () {
                                 $.each($targets, function (index, elem) {
                                     var $target = $(elem);
-                                    var $data = $html.clone();
-                                    $target[selector.mode]($data);
-                                    $data.jsless(options);
+                                    if ($target.parents("body").length != 0) {
+                                        var $data = $html.clone();
+                                        $target[selector.mode]($data);
+                                        $data.jsless(options);
+                                    }
                                 });
                                 setTimeout(function () {
                                     if (ajaxResponse.success) {
@@ -899,7 +904,7 @@
                         retryCount: 0
                     };
                     var start = function () {
-                        if ($success.parents("body").length == 0) {
+                        if ($success.parents("body").length == 0 && successSelector.target != "empty") {
                             logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: $success is detached");
                             return;
                         }
