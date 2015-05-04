@@ -661,17 +661,19 @@
                 else if ($element.attr("contenteditable") != null) {
                     val = $element.html();
                 }
-                else if ($element.is("input:checkbox,input:radio")) {
-                    if ($element.is("input[value]")) {
-                        if ($element.is(":checked")) {
-                            val = $element.val();
-                        }
-                    }
-                    else {
-                        val = $element.is(":checked");
-                        if (val == "on") { //IE fix
+                else if ($element.is("input:checkbox")) {
+                    if ($element.is(":checked")) {
+                        val = $element.val();
+                        if (!$element.is("input[value]")
+                            || val == "on" //IE 10 hack because inputs always have value as an attribute
+                            ) {
                             val = true;
                         }
+                    }
+                }
+                else if ($element.is("input:radio")) {
+                    if ($element.is(":checked")) {
+                        val = $element.val();
                     }
                 }
                 else {
