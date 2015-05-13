@@ -670,6 +670,13 @@
                             val = true;
                         }
                     }
+                    else {
+                        if (!$element.is("input[value]")
+                            || $element.val() == "off" //IE 10 hack because inputs always have value as an attribute
+                            ) {
+                            val = false;
+                        }
+                    }
                 }
                 else if ($element.is("input:radio")) {
                     if ($element.is(":checked")) {
