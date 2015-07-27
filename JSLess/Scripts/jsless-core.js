@@ -116,12 +116,22 @@
                 var rawBehavior = $target.attr("data-jsless");
                 var behaviors = [];
                 if (rawBehavior.indexOf('[{"') == 0) {
-                    behaviors = $.parseJSON(rawBehavior);
+                    try {
+                        behaviors = $.parseJSON(rawBehavior);
+                    }
+                    catch (err) {
+                        logger.error("Error parsing rawBehavior: " + rawBehavior + " :: " + err);
+                    }
                 }
                 else {//need threat assesment on this
-                    var checkMe = eval(rawBehavior);
-                    if (Object.prototype.toString.call(checkMe) === '[object Array]') {
-                        behaviors = checkMe;
+                    try {
+                        var checkMe = eval(rawBehavior);
+                        if (Object.prototype.toString.call(checkMe) === '[object Array]') {
+                            behaviors = checkMe;
+                        }
+                    }
+                    catch (err) {
+                        logger.error("Error parsing rawBehavior: " + rawBehavior + " :: " + err);
                     }
                 }
                 $(behaviors).each(function (index, behavior) {
