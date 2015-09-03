@@ -434,7 +434,7 @@
                     var ajaxSettings = {
                         url: settings.url,
                         category: "normal", //used to group calls to segment aborting if necessary
-                        datatype: "json",
+                        datatype: "html",
                         method: settings.method,
                         subdomain: null,
                         params: params,

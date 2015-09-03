@@ -116,8 +116,7 @@
     invoke.prototype = {
         settings: {
             url: null,
-            category: "normal", //used to group calls to segment aborting if necessary
-            datatype: "json",
+            category: "normal", //used to group calls to segment aborting if necessary            
             method: "GET",
             subdomain: null,
             params: null,
