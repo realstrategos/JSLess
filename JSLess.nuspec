@@ -5,7 +5,7 @@
         <version>2.2.9</version>
         <authors>Keith Kauffman</authors>
         <owners>Keith Kauffman</owners>
-        <licenseUrl>http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode</licenseUrl>
+        <licenseUrl>http://www.gnu.org/licenses/lgpl-3.0.en.html</licenseUrl>
         <projectUrl>https://github.com/realstrategos/JSLess</projectUrl>
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
         <description>JSLess Framework</description>

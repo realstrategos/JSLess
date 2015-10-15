@@ -3,8 +3,11 @@
  * https://github.com/realstrategos/JSLess
  * *
  * Copyright 2013 OptixConnect LLC and other contributors
- * Released under the Creative Commons Attribution NonCommercial (CC-NC)
- * http://creativecommons.org/licenses/by-nc/3.0/legalcode
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser General Public License
+ * (LGPL) version 3.0 which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/lgpl-3.0.en.html
  *
  */
 
