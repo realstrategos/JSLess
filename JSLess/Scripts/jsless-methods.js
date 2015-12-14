@@ -407,9 +407,7 @@
 
                 if (settings.loading) {
                     var renderSheen = function ($source) {
-                        var $sheen = $($(settings.loading).html());
-                        $sheen.width($source.width());
-                        $sheen.height($source.height());
+                        var $sheen = $($(settings.loading).html());                        
                         $sheen.css("left", $source[0].offsetLeft);
                         $sheen.css("top", $source[0].offsetTop);
                         $source.append($sheen);
