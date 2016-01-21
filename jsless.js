@@ -843,23 +843,7 @@
                 var params = jsless.getParams(compiledParams, $widget, $element);
                 var $success = successSelector.getVal();
                 var $fail = failSelector.getVal();
-
-                if (settings.loading) {
-                    var renderSheen = function ($source) {
-                        var $sheen = $($(settings.loading).html());
-                        $sheen.width($source.width());
-                        $sheen.height($source.height());
-                        $sheen.css("left", $source[0].offsetLeft);
-                        $sheen.css("top", $source[0].offsetTop);
-                        $source.append($sheen);
-                        $sheen.show();
-                        $element.bind("jsless-ajax-beforecomplete", function () {
-                            $sheen.remove();
-                        });
-                    }
-                    renderSheen($success);
-                }
-
+                
                 if (settings.eventDataMap && settings.eventData) {
                     var eventData = jsless.dataMap(settings.eventDataMap, settings.eventData);
                     $.extend(params, eventData);
@@ -870,6 +854,21 @@
                     $element.trigger("jsless-ajax-begin");
                     $success.triggerHandler("jsless-" + settings.name + "-beforestart");
                     $fail.triggerHandler("jsless-" + settings.name + "-beforestart");
+                    if (settings.loading) {
+                        var renderSheen = function ($source) {
+                            var $sheen = $($(settings.loading).html());
+                            $sheen.width($source.width());
+                            $sheen.height($source.height());
+                            $sheen.css("left", $source[0].offsetLeft);
+                            $sheen.css("top", $source[0].offsetTop);
+                            $source.append($sheen);
+                            $sheen.show();
+                            $element.bind("jsless-ajax-beforecomplete", function () {
+                                $sheen.remove();
+                            });
+                        }
+                        renderSheen($success);
+                    }
                     var ajaxSettings = {
                         url: settings.url,
                         category: "normal", //used to group calls to segment aborting if necessary
