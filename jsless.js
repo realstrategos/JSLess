@@ -1,5 +1,5 @@
 /*!
- * JSLess Library - Core
+ * JSLess Library - v2.3.2
  * https://github.com/realstrategos/JSLess
  * *
  * Copyright 2013 OptixConnect LLC and other contributors
@@ -821,11 +821,15 @@
                 var failSelector = jsless.getSelector(settings.onFail, $widget, $element);
                 var compiledParams = jsless.compileParams(settings.params, $widget, $element);
 
+                var spamPrevention = null;
                 var onEvent = function (event, eventData) {
-                    if (!settings.requireEnabled || $source.is(":enabled")) {
-                        settings.eventData = eventData;
-                        jsless._methods.htmlevent(event, $widget, $element, settings, successSelector, failSelector, compiledParams, options);
-                    }
+                    clearTimeout(spamPrevention);
+                    spamPrevention = setTimeout(function () {
+                        if (!settings.requireEnabled || $source.is(":enabled")) {
+                            settings.eventData = eventData;
+                            jsless._methods.htmlevent(event, $widget, $element, settings, successSelector, failSelector, compiledParams, options);
+                        }
+                    }, 0);
                 }
                 if (settings.event == "load") {
                     $widget.one("jsless-widget-complete", onEvent);
@@ -843,7 +847,7 @@
                 var params = jsless.getParams(compiledParams, $widget, $element);
                 var $success = successSelector.getVal();
                 var $fail = failSelector.getVal();
-                
+
                 if (settings.eventDataMap && settings.eventData) {
                     var eventData = jsless.dataMap(settings.eventDataMap, settings.eventData);
                     $.extend(params, eventData);

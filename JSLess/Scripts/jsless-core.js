@@ -1,5 +1,5 @@
 /*!
- * JSLess Library - Core
+ * JSLess Library - v2.3.2
  * https://github.com/realstrategos/JSLess
  * *
  * Copyright 2013 OptixConnect LLC and other contributors
