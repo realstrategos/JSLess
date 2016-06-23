@@ -384,13 +384,13 @@
 
                 var spamPrevention = null;
                 var onEvent = function (event, eventData) {
-                    clearTimeout(spamPrevention);
-                    spamPrevention = setTimeout(function () {
-                        if (!settings.requireEnabled || $source.is(":enabled")) {
+                    if (!settings.requireEnabled || $source.is(":enabled")) {
+                        clearTimeout(spamPrevention);
+                        spamPrevention = setTimeout(function () {
                             settings.eventData = eventData;
                             jsless._methods.htmlevent(event, $widget, $element, settings, successSelector, failSelector, compiledParams, options);
-                        }
-                    }, 0);
+                        }, 0);
+                    }
                 }
                 if (settings.event == "load") {
                     $widget.one("jsless-widget-complete", onEvent);
