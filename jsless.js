@@ -1,5 +1,5 @@
 /*!
- * JSLess Library - v2.3.3
+ * JSLess Library - v2.3.4
  * https://github.com/realstrategos/JSLess
  * *
  * Copyright 2013 OptixConnect LLC and other contributors
@@ -821,24 +821,30 @@
                 var failSelector = jsless.getSelector(settings.onFail, $widget, $element);
                 var compiledParams = jsless.compileParams(settings.params, $widget, $element);
 
-                var spamPrevention = null;
-                var onEvent = function (event, eventData) {
-                    if (!settings.requireEnabled || $source.is(":enabled")) {
-                        clearTimeout(spamPrevention);
-                        spamPrevention = setTimeout(function () {
-                            settings.eventData = eventData;
-                            jsless._methods.htmlevent(event, $widget, $element, settings, successSelector, failSelector, compiledParams, options);
-                        }, 0);
-                    }
-                }
+
                 if (settings.event == "load") {
-                    $widget.one("jsless-widget-complete", onEvent);
+                    $widget.one("jsless-widget-complete", function (event, eventData) {
+                        settings.eventData = eventData;
+                        jsless._methods.htmlevent(event, $widget, $element, settings, successSelector, failSelector, compiledParams, options);
+                    });
                 }
                 else {
-                    $source.bind(settings.event, onEvent);
+                    var rebind = function () {
+                        $source.one(settings.event, onEvent);
+                    }
+                    var onEvent = function (event, eventData) {
+                        if (!settings.requireEnabled || $source.is(":enabled")) {
+                            settings.eventData = eventData;
+                            jsless._methods.htmlevent(event, $widget, $element, settings, successSelector, failSelector, compiledParams, options, rebind);
+                        }
+                        else {
+                            rebind();
+                        }
+                    }
+                    rebind();
                 }
             },
-            htmlevent: function (event, $widget, $element, settings, successSelector, failSelector, compiledParams, options) {
+            htmlevent: function (event, $widget, $element, settings, successSelector, failSelector, compiledParams, options, onComplete) {
                 var logMessage = ""; //try { var logMessage = JSON.stringify(settings); } catch (ex) { }
                 logger.debug(settings.name + " event:" + settings.event + "\r\n\t :: " + logMessage);
                 if (settings.stopEventPropagation && settings.event != "load") {
@@ -881,6 +887,9 @@
                         subdomain: null,
                         params: params,
                         onComplete: function (ajaxResponse) {
+                            if (onComplete) {
+                                onComplete();
+                            }
                             ajaxResponse.success = ajaxResponse.success && ajaxResponse.isHTML;
                             var $html = $(ajaxResponse.data);
                             var eventParams = jsless.processContainer($html.find("[data-jsless-params]"));
