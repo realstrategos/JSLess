@@ -873,7 +873,7 @@
                             $sheen.css("top", $source[0].offsetTop);
                             $source.append($sheen);
                             $sheen.show();
-                            $element.bind("jsless-ajax-beforecomplete", function () {
+                            $element.bind("jsless-ajax-complete", function () {
                                 $sheen.remove();
                             });
                         }
