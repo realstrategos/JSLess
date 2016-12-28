@@ -103,6 +103,7 @@
                     $target = $scope.find(settings.target);
                 }
                 if (selector == "form") {
+                    settings.mode = "replaceWith";
                     $target = $element.parents("form").first();
                 }
                 return $target;
@@ -124,6 +125,7 @@
                 $val = $(window);
             }
             else if (selector == "form") {
+                settings.mode = "replaceWith";
                 $val = $element.parents("form").first();
             }
             else if (selector == "empty") {
