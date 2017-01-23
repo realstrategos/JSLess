@@ -1126,7 +1126,7 @@
                             $.each(settings.object.split("."), function (indx, oname) {
                                 object = object[oname];
                             });
-                            var method = object[settings.method];
+                            method = object[settings.method];
                         }
                         var result = method.apply(object, params);
                         $element.triggerHandler("jsless-" + settings.name + "-complete");

@@ -58,7 +58,8 @@
                 var params = settings.params;
                 var $eventSource = jsless.getSelector(settings.eventSource, $widget, $element).getVal();
                 var targetSelector = jsless.getSelector(settings.target, $widget, $element);
-                $eventSource.bind(settings.event, function (event) {
+
+                var onEvent = function (event, eventData) {
                     logger.debug(settings.name + " event:" + settings.event);
                     var request = $element.triggerHandler("jsless-" + settings.name + "-begin"); // allow for intercept and termination
                     if (request === undefined || request) {
@@ -70,7 +71,9 @@
                             $target.val(val);
                         });
                     }
-                });
+                }
+                //use default binding settings
+                jsless.behaviors.base($widget, $element, settings, onEvent);
             },
             htmlnext: function ($widget, $element, behavior, options) {
                 var settings = $.extend(true, {}, jsless.settings.method, options.method, {
@@ -86,7 +89,7 @@
 
                 var target = jsless.getSelector(settings.next, $root, $element);
                 var compiledParams = jsless.compileParams(settings.params, $widget, $element);
-                var onEvent = function (event) {
+                var onEvent = function (event, eventData) {
                     var $target = target.getVal();
                     var $prev = $root.find(settings.prev);
                     $target.show();
@@ -99,13 +102,8 @@
                     });
                     jsless._methods.htmlevent(event, $widget, $element, settings, target, target, compiledParams, options);
                 }
-                if (settings.event == "load") {
-                    $widget.one("jsless-widget-complete", onEvent);
-                }
-                else {
-                    $element.bind(settings.event, onEvent);
-                }
-
+                //use default binding settings
+                jsless.behaviors.base($widget, $element, settings, onEvent);
             }
         }
     }
