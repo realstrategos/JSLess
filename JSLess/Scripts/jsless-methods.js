@@ -228,7 +228,11 @@
         getValue: function ($element, result, name) {
             var getVal = function () {
                 var val = null;
-                if ($element.is("select")) {
+                if ($element.is("input:file")) {
+                    var file = $element[0].files[0];
+                    val = file;
+                }
+                else if ($element.is("select")) {
                     $element.find("option:selected").each(function (index, item) {
                         result = jsless.getValue($(item), result, name);
                     });

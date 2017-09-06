@@ -13,10 +13,47 @@
 
     var logger = jsless.logger;
 
+    function contains(jsonObj, test) {
+        var result = test(jsonObj);
+        if (!result) {
+            switch (typeof jsonObj) {
+                case "object":
+                    $.each(jsonObj, function (k, v) {
+                        // k is either an array index or object key
+                        if (contains(v, test)) {
+                            result = true;
+                            return false;
+                        }
+                    });
+                    break;
+                case "array":
+                    jsonObj.forEach(function (v) {
+                        // k is either an array index or object key
+                        if (contains(v, test)) {
+                            result = true;
+                            return false;
+                        }
+                    }, this);
+                    break;
+            }
+        }
+        return result;
+    }
+
     var transport = function (options) {
         //var contentType = 'application/json; charset=utf-8';
+        var tempData = $.postify(options.data);
+        if (options.type == 'POST' && contains(tempData, function (v) { return v instanceof File })) {
+            var formData = new FormData();
+            Object.keys(tempData).forEach(function (key) {
+                formData.append(key, tempData[key]);
+            });
+            tempData = formData;
+            options.processData = false;
+            options.contentType = false;
+        }
         var settings = $.extend({}, options, {
-            data: $.postify(options.data),
+            data: tempData,
             traditional: true
             //, converters: {
             //    "text json": function (result) {
@@ -67,13 +104,13 @@
             var hasOwnProperty = Object.prototype.hasOwnProperty,
                 hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString'),
                 dontEnums = [
-                  'toString',
-                  'toLocaleString',
-                  'valueOf',
-                  'hasOwnProperty',
-                  'isPrototypeOf',
-                  'propertyIsEnumerable',
-                  'constructor'
+                    'toString',
+                    'toLocaleString',
+                    'valueOf',
+                    'hasOwnProperty',
+                    'isPrototypeOf',
+                    'propertyIsEnumerable',
+                    'constructor'
                 ],
                 dontEnumsLength = dontEnums.length;
 
@@ -152,14 +189,14 @@
             }
             this._running = true;
             this._request = null;
-                        
+
             this._request = jsless.transport({
                 url: this.settings.url,
                 type: this.settings.method,
                 //contentType: contentType,
                 dataType: this.settings.datatype,
                 data: this.settings.params,
-                cache: false,                
+                cache: false,
                 complete: $.proxy(_onComplete, this)
             });
             return true;
@@ -194,18 +231,23 @@
                     object[key] = "";
                 }
                 var postKey = isFinite(key)
-                ? (prefix != "" ? prefix : "") + "[" + key + "]"
-                : (prefix != "" ? prefix + "." : "") + key;
-                switch (typeof (object[key])) {
-                    case "number": case "string": case "boolean":
-                        result[postKey] = object[key];
-                        break;
-                    case "object":
-                        if (object[key].toUTCString)
-                            result[postKey] = object[key].toUTCString().replace("UTC", "GMT");
-                        else {
-                            buildResult(object[key], postKey != "" ? postKey : key);
-                        }
+                    ? (prefix != "" ? prefix : "") + "[" + key + "]"
+                    : (prefix != "" ? prefix + "." : "") + key;
+                if (object[key] instanceof File) {
+                    result[postKey] = object[key];
+                }
+                else {
+                    switch (typeof (object[key])) {
+                        case "number": case "string": case "boolean":
+                            result[postKey] = object[key];
+                            break;
+                        case "object":
+                            if (object[key].toUTCString)
+                                result[postKey] = object[key].toUTCString().replace("UTC", "GMT");
+                            else {
+                                buildResult(object[key], postKey != "" ? postKey : key);
+                            }
+                    }
                 }
             }
         };
